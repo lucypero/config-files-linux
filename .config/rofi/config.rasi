@@ -1,0 +1,25 @@
+configuration {
+	width: 40;
+	lines: 8;
+	font: "Fira Code Retina 16";
+	location: 8;
+	padding: 30;
+	yoffset: -40;
+	xoffset: 170;
+	disable-history: true;
+	eh: 1;
+	separator-style: "dash";
+	hide-scrollbar: true;
+	color-normal: "argb:00000000, #976490, argb:00000000, #FAB1C3, #976490";
+	color-urgent: "argb:00000000, #F99157 , argb:00000000, #F99157 , #976490";
+	color-active: "argb:00000000, #6699CC , argb:00000000, #6699CC , #976490";
+	color-window: "argb:eeffffff, #FAB1C3, #FAB1C3";
+	terminal: "alacritty";
+	kb-remove-char-back: "BackSpace";
+	kb-remove-to-eol: "Control+Shift+e";
+	kb-accept-entry: "Control+m,Return,KP_Enter";
+	kb-mode-next: "Shift+Right,Control+Tab,Control+l";
+	kb-mode-previous: "Shift+Left,Control+Shift+Tab,Control+h";
+	kb-row-up: "Up,Control+k,Shift+Tab,Shift+ISO_Left_Tab";
+	kb-row-down: "Down,Control+j";
+}

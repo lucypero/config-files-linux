@@ -1,0 +1,83 @@
+# Basic Settings
+# set previewer ~/.config/lf/preview
+set preview true
+set hidden true
+set drawbox true
+set icons true
+set ignorecase true
+set promptfmt " %w/%f"
+set ratios 2:1
+
+# define a custom 'open' command
+# This command is called when current file is not a directory. You may want to
+# use either file extensions and/or mime types here. Below uses an editor for
+# text files and a file opener for the rest.
+cmd open ${{
+  of "$f"
+}}
+
+cmd bulk-rename ${{
+    old="$(mktemp)"
+    new="$(mktemp)"
+    [ -n "$fs" ] && fs="$(ls)"
+    printf '%s\n' "$fs" >"$old"
+    printf '%s\n' "$fs" >"$new"
+    $EDITOR "$new"
+    [ "$(wc -l "$new")" -ne "$(wc -l "$old")" ] && exit
+    paste "$old" "$new" | while IFS= read -r names; do
+        src="$(printf '%s' "$names" | cut -f1)"
+        dst="$(printf '%s' "$names" | cut -f2)"
+        if [ "$src" = "$dst" ] || [ -e "$dst" ]; then
+            continue
+        fi
+        mv -- "$src" "$dst"
+    done
+    rm -- "$old" "$new"
+    lf -remote "send $id unselect"
+}}
+
+cmd mkdir %mkdir "$@"
+map a push :mkdir<space>
+
+cmd rename %mv -i $f $1
+map r push :rename<space>
+
+map <delete> delete
+map <esc> quit
+
+# map d # leave the command name empty like this for unmapping
+# map dd delete
+# # Remove selected files with dD with confirmation
+# map dD ${{
+#     echo 'delete?[y/n]'
+#     read ans
+#     if [ $ans = 'y' ] then 
+#       echo 'deleting files..'
+#       rm -r $fx
+#     else
+#       echo 'cancelled.'
+#     fi
+# }}
+
+cmd test-env %{{
+  rm -p ~/.cache/lf-test
+  mkdir -p ~/.cache/lf-test/hi/test/test2
+  touch ~/.cache/lf-test/hello \
+        ~/.cache/lf-test/hello2 \
+        ~/.cache/lf-test/hello3 \
+        ~/.cache/lf-test/hello3 \
+        ~/.cache/lf-test/hi/hi1 \
+        ~/.cache/lf-test/hi/hi2 \
+        ~/.cache/lf-test/hi/hi3 \
+        ~/.cache/lf-test/hi/hi4 \
+        ~/.cache/lf-test/hi/test/test1 \
+        ~/.cache/lf-test/hi/test/test2 \
+        ~/.cache/lf-test/hi/test/test3 \
+        ~/.cache/lf-test/hi/test/test4 \
+        ~/.cache/lf-test/hi/test/test2/haha1 \
+        ~/.cache/lf-test/hi/test/test2/haha2 \
+        ~/.cache/lf-test/hi/test/test2/haha3 \
+        ~/.cache/lf-test/hi/test/test2/haha4 \
+
+  lf -remote "send $id cd ~/.cache/lf-test"
+}}
