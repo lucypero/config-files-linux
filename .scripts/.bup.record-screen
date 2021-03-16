@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Work in progress
+
+
+# I could not get audio to record with alsa, and with pulseaudio the video lags behind the audio. no idea why that is happening
+
+# the video lags a looooot. it is super slow. that might be why.
+
+#command that i am using right now
+#ffmpeg -y -f x11grab -s 1920x1080 -i :0.0 -f pulse -i default out.mp4
+
+

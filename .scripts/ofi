@@ -1,0 +1,4 @@
+#!/bin/sh
+# Open File - Interactive
+# calls 'of' (open file) on fzf output
+of "$(fzf)"

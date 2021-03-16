@@ -1,0 +1,12 @@
+#!/bin/sh
+#NOT DONE YET
+#this is mostly pseudocode
+
+pgrep $1
+
+# for each of those do..
+
+foreach 
+kill $pid
+tail --pid=$pid -f /dev/null
+

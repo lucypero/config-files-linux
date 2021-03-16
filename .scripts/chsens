@@ -1,0 +1,2 @@
+#!/bin/sh
+xinput --set-prop "Logitech G203 LIGHTSYNC Gaming Mouse" "Coordinate Transformation Matrix" $1, 0.0, 0.0, 0.0, $1, 0.0, 0.0, 0.0, 1.0

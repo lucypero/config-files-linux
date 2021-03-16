@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#I made this basically for timeout.. sometimes the keybind won't capture depending on where your focusing, like rofi menus, so you can call this script  with a timeout option easily for that
+
+#scrot arguments cheatsheet:
+# -d num = delay screenshot by [num] seconds
+# -u = screenshot active window (does not work for rofi, can't focus on it)
+
+scrot $(xdg-user-dir PICTURES)/Screenshot_%Y-%m-%d-%Hh%Mm%Ss.png -e 'xclip -selection clipboard -t image/png -i $f' $@

@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+selected="$(ps -a -u $USER | \
+            rofi -dmenu -i -p "[ Kill Process ]" | \
+            awk '{print $1" "$4}')"; 
+[ ! -z "$selected" ] && {
+        selpid="$(awk '{print $1}' <<< $selected)"; 
+        kill -9 $selpid
+        notify-send "Killed process" "$(awk '{print $2}' <<< $selected)"
+}

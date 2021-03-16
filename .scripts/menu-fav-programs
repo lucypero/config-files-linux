@@ -1,0 +1,5 @@
+#!/bin/sh
+programs="$BROWSER discord telegram-desktop nautilus"
+exec $(echo $programs | xargs -n1 | rofi -dmenu -i -p "[ Favorites ]")
+
+

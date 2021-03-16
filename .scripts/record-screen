@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if pid=$(pgrep -f giph); then
+  echo giph is running, kill it $pid
+  kill -SIGINT $pid
+else
+  echo giph is not running, record!
+  giph -s -l -c 1,1,1,0.3 -b 5 -p -5 --notify --format "mp4" ~/Videos/out.mp4
+fi

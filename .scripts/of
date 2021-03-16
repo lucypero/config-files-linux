@@ -1,0 +1,13 @@
+#!/bin/sh
+#Open File using the appropriate program according to file type
+
+f=$1
+ft=$(file --mime-type "$f" -b)
+case $ft in
+  inode/x-empty) $EDITOR "$f";;
+  text/*) $EDITOR "$f";;
+  video/*) mpv "$f";;
+  image/*) sxiv-cycle "$f";;
+  *) echo "I don't know how to open the file \"$f\" of type: $ft"
+esac
+
