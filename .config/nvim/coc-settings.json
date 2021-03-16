@@ -1,0 +1,16 @@
+{
+  "languageserver": {
+    "odin": {
+      "command": "ols",
+      "filetypes": ["odin"],
+      "rootPatterns": ["ols.json"]
+    }
+  },
+  "suggest.autoTrigger": "trigger",
+  "suggest.keepCompleteopt": true,
+  "suggest.labelMaxLength": 40,
+  "rust-analyzer.diagnostics.disabled": [   
+    "unresolved-import",
+    "unresolved-proc-macro"
+  ]
+}
