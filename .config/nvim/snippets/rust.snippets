@@ -1,0 +1,16 @@
+
+snippet fnm "fn name(&self, ?) -> ? {}"
+fn ${1:function_name}(&self, $2)${3/..*/ -> /}$3 {
+	${VISUAL}$0
+}
+endsnippet
+
+# vim:ft=snippets:
+
+snippet impd "impl fmt::Display for ? {}"
+impl fmt::Display for ${1:struct} {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        ${VISUAL}$0
+        write!(f, "{}", disp)
+    }
+}
