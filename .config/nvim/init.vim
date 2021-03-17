@@ -12,7 +12,11 @@ let g:polyglot_disabled = ['odin', 'python', 'c', 'cpp', 'json']
 
 let g:coc_global_extensions = [
 \ 'coc-pyright',
-\ 'coc-marketplace'
+\ 'coc-marketplace',
+\ 'coc-lua',
+\ 'coc-json',
+\ 'coc-vimlsp',
+\ 'coc-rust-analyzer'
 \ ]
 
 call plug#begin('~/.local/share/nvim/plugged')
@@ -36,9 +40,11 @@ Plug 'Raimondi/delimitMate'
 Plug 'jremmen/vim-ripgrep'
 Plug 'stefandtw/quickfix-reflector.vim'
 Plug 'Tetralux/odin.vim'
+
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'nvim-treesitter/playground'
+
 Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install()}}
 Plug 'tpope/vim-dispatch'
 Plug 'skywind3000/asyncrun.vim'
@@ -51,6 +57,14 @@ Plug 'tpope/vim-obsession'
 Plug 'justinmk/vim-sneak'
 Plug 'kyazdani42/nvim-web-devicons' " Recommended (for coloured icons)
 Plug 'akinsho/nvim-bufferline.lua'
+
+" snippets
+Plug 'honza/vim-snippets'
+
+" vim-telescope. Very promising. Still not fully done yet. Does not work well with  coc :/ so i can's search symbols
+" Plug 'nvim-lua/popup.nvim'
+" Plug 'nvim-lua/plenary.nvim'
+" Plug 'nvim-telescope/telescope.nvim'
 
 call plug#end()
 
@@ -217,11 +231,10 @@ set smartcase
 set splitbelow splitright
 
 " " Shortcutting split navigation
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
-
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
 
 " " set scrolloff so that the cursor does not reach the edges of the screen (which is never good)
@@ -379,7 +392,7 @@ au VimResized * wincmd =
 
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = {"c", "cpp", "json", "javascript", "go", "python", "rust", "query"},
+  ensure_installed = {"c", "cpp", "json", "javascript", "go", "python", "rust", "query", "lua"},
   highlight = {
     enable = true,
   },
@@ -507,11 +520,9 @@ inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
 " Use <Tab> and <S-Tab> to navigate through popup menu
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " Set completeopt to have a better completion experience
 set completeopt=menuone,noinsert,noselect
@@ -542,6 +553,9 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+" rename symbol
+nmap <silent> gR <Plug>(coc-rename)
+
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
@@ -565,6 +579,19 @@ nnoremap <leader>cd :CocList diagnostics<cr>
 nnoremap <leader>co :CocList --auto-preview outline<cr>
 nnoremap <leader>cs :CocList --auto-preview -I symbols<cr>
 
+"" Snippets
+
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+
 "disable auto trigger completion
 
 
@@ -581,8 +608,8 @@ function! GetRuleDefinition(rule)
     let l:the_command = '/^\s*' . a:rule . '\s*:'
     execute the_command
 endfunction
-nnoremap <leader>gR :call GetRuleDefinition("
-nnoremap <leader>gr yiw:call GetRuleDefinition("<c-r>+")<cr>
+" nnoremap <leader>gR :call GetRuleDefinition("
+" nnoremap <leader>gr yiw:call GetRuleDefinition("<c-r>+")<cr>
 
 " " F10 to toggle quickfix window	
 nnoremap <F10> :call asyncrun#quickfix_toggle(15)<cr>	
@@ -719,7 +746,13 @@ let g:sneak#label = 1
 let g:sneak#use_ic_scs = 1
 
 " " Bufferline setup
-lua require'bufferline'.setup{}
+lua <<EOF
+require'bufferline'.setup{
+  options = {
+    always_show_bufferline = false
+  }
+}
+EOF
 
 " " command to turn off syntax highlighting. disables TS, normal vim syntax and 
 " "    reenables background transparency
