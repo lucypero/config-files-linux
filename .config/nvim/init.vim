@@ -112,26 +112,43 @@ set background=dark
 
 " colorscheme strawberry-light
 " colorscheme atom-dark
-colorscheme quantum
+let s:current_colorscheme = 'quantum'
+execute printf("colorscheme %s", s:current_colorscheme)
 " colorscheme seoul256-light
 " colorscheme PaperColor
 
 " colorscheme summerfruit256
 
+let s:transparent_bg = 1
+
+function! ToggleTransparentBG() 
+  if s:transparent_bg == -1
+    execute printf("colorscheme %s", s:current_colorscheme)
+  else
+    highlight clear CursorLine
+    highlight Normal ctermbg=none guibg=NONE
+    highlight LineNr ctermbg=none guibg=NONE
+    highlight Folded ctermbg=none guibg=NONE
+    highlight NonText ctermbg=none guibg=NONE
+    highlight SpecialKey ctermbg=none guibg=NONE
+    highlight VertSplit ctermbg=none guibg=NONE
+    highlight SignColumn ctermbg=none guibg=NONE
+    highlight CursorColumn ctermbg=NONE guibg=NONE
+    highlight CursorLine ctermbg=NONE guibg=NONE
+    highlight CursorLineNr ctermbg=NONE guibg=NONE
+    highlight StatusLine ctermbg=NONE guibg=NONE
+    highlight StatusLineNC ctermbg=NONE guibg=NONE
+    highlight clear LineNr
+    highlight clear SignColumn
+  endif
+
+  let s:transparent_bg = s:transparent_bg * -1
+endfunction
+call ToggleTransparentBG()
+
+command! ToggleTransparentBG call ToggleTransparentBG()
+
 " disable background override (use terminal background settings)
-" highlight clear CursorLine
-" highlight Normal ctermbg=none guibg=NONE
-" highlight LineNr ctermbg=none guibg=NONE
-" highlight Folded ctermbg=none guibg=NONE
-" highlight NonText ctermbg=none guibg=NONE
-" highlight SpecialKey ctermbg=none guibg=NONE
-" highlight VertSplit ctermbg=none guibg=NONE
-" highlight SignColumn ctermbg=none guibg=NONE
-" highlight CursorColumn ctermbg=NONE guibg=NONE
-" highlight CursorLine ctermbg=NONE guibg=NONE
-" highlight CursorLineNr ctermbg=NONE guibg=NONE
-" highlight clear LineNr
-" highlight clear SignColumn
 
 let mapleader = "-"
 
@@ -844,6 +861,8 @@ EOF
 
 let g:termdebug_wide = 50
 function! DebugRustBegin(exe) 
+  hi debugPC term=reverse ctermbg=darkblue guibg=darkblue
+  hi debugBreakpoint term=reverse ctermbg=red guibg=red
   set signcolumn=yes
   packadd termdebug
   let termdebugger="rust-gdb"
@@ -854,10 +873,6 @@ function! HideSignColumn()
   set signcolumn=no
 endfunction
 command! HideSignColumn call HideSignColumn()
-
-hi debugPC term=reverse ctermbg=darkblue guibg=darkblue
-hi debugBreakpoint term=reverse ctermbg=red guibg=red
-
 
 " ":Over, :Step, :Continue, :Stop, :Evaluate
 nnoremap <leader>ds :Step<cr>

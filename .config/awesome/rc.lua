@@ -368,19 +368,18 @@ globalkeys = my_table.join(
         {description = "focus right", group = "client"}),
 
     -- Alt + Tab: Go back to previously focused client
-    awful.key({"Mod1"}, "Tab", function ()
-        awful.client.focus.history.previous()
-        if client.focus then client.focus:raise() end
-    end),
-
-
-    -- -- Alt + [Shift] + Tab: Cycling client focus
     -- awful.key({"Mod1"}, "Tab", function ()
-    --     awful.client.focus.byidx(1)
+    --     awful.client.focus.history.previous()
+    --     if client.focus then client.focus:raise() end
     -- end),
-    -- awful.key({"Mod1", "Shift"}, "Tab", function ()
-    --     awful.client.focus.byidx(-1)
-    -- end),
+
+    -- Alt + [Shift] + Tab: Cycling client focus
+    awful.key({"Mod1"}, "Tab", function ()
+        awful.client.focus.byidx(1)
+    end),
+    awful.key({"Mod1", "Shift"}, "Tab", function ()
+        awful.client.focus.byidx(-1)
+    end),
 
     --------------------
     -- Layout manipulation
