@@ -655,7 +655,9 @@ awful.rules.rules = {
           "qbittorrent",
           "obs",
           "Pavucontrol",
-          "Thunar"
+          "Thunar",
+          "kolourpaint",
+          "Nitrogen"
       },
 
         name = {

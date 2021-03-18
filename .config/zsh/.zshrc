@@ -162,7 +162,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 if [ "$THEME_TYPE" = "light" ]; then
   export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --color=hl:#ff69f5,fg:#000000,fg+:#000000,hl:#000000,hl+:#ff69f5,info:#ff69f5,prompt:#ff69f5,pointer:#ff91f0,marker:-1,spinner:#ff69f5,header:#ff69f5,bg:-1,bg+:-1,info:#000000'
 elif [ "$THEME_TYPE" = "dark" ]; then
-  export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --color=hl:#ffb8f6 --color=fg+:,hl+:#ffb8f6 --color=info:#ffb8f6,prompt:#ffb8f6,pointer:#ff91f0 --color=marker:-1,spinner:#ffb8f6,header:#ffb8f6'
+  export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --color=hl:#ffb8f6,fg+:-1,hl+:#ffb8f6,info:#ffb8f6,prompt:#ffb8f6,pointer:#ff91f0,marker:-1,spinner:#ffb8f6,header:#ffb8f6,bg:-1,bg+:-1'
 fi
 
 #functions for convenience
@@ -179,6 +179,8 @@ eca() { $EDITOR ~/.config/awesome/rc.lua }
 ecp() { $EDITOR ~/.config/polybar/config.ini }
 #edit notes
 en() { rg --hidden --files ~/docs ~/Anime/Lucy/therapy | fzf | xargs -r $EDITOR ;}
+#turn on/off internet (args are up/down)
+internet() {sudo ip link set enp6s0 $1}
 #Change Directory (Interactive) using fzf
 cdi() { cd $(find . -type d | fzf);zle reset-prompt }
 zle -N change-dir-fzf cdi

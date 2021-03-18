@@ -57,7 +57,7 @@ Plug 'tpope/vim-obsession'
 Plug 'justinmk/vim-sneak'
 Plug 'kyazdani42/nvim-web-devicons' " Recommended (for coloured icons)
 Plug 'akinsho/nvim-bufferline.lua'
-
+Plug 'tpope/vim-fugitive'
 " snippets
 Plug 'honza/vim-snippets'
 
@@ -65,6 +65,10 @@ Plug 'honza/vim-snippets'
 " Plug 'nvim-lua/popup.nvim'
 " Plug 'nvim-lua/plenary.nvim'
 " Plug 'nvim-telescope/telescope.nvim'
+
+Plug 'kana/vim-submode'
+Plug 'brenopacheco/vim-hydra'
+Plug 'mfussenegger/nvim-dap'
 
 call plug#end()
 
@@ -778,3 +782,95 @@ command! TurnOffSyntaxHighlighting execute TurnOffSyntaxHighlighting()
 
 " execute TurnOffSyntaxHighlighting()
 
+
+" vim-submode config
+function! Submode_test() 
+  echomsg 'hello!'
+endfunction
+
+call submode#enter_with('debug-mode', 'n', '', '<leader>ge')
+call submode#leave_with('debug-mode', 'n', '', '<leader>gE')
+call submode#map('debug-mode', 'n', '', 'h', ':echomsg "hello"<cr>')
+
+" vim-hydra config
+
+
+function Hide_hydra(height, width)
+  return { 'row': 0, 'col': 0 }
+endfunction
+
+let s:example_hydra =
+            \ {
+            \   'name':        'example',
+            \   'title':       'Example hydra',
+            \   'show':        'none',
+            \   'exit_key':    "q",
+            \   'feed_key':    v:true,
+            \   'foreign_key': v:true,
+            \   'position': 'Hide_hydra',
+            \   'keymap': [
+            \     {
+            \       'name': 'Debug',
+            \       'keys': [
+            \         ['c', 'echomsg "continuing.."',                     'call Submode_test()'],
+            \         ['n', 'echomsg "stepping to next line.."',                     'call Submode_test()'],
+            \       ]
+            \     },
+            \   ]
+            \ }
+
+silent call hydra#hydras#register(s:example_hydra)
+
+"dap config
+
+lua << EOF
+local dap = require('dap')
+dap.adapters.rust = {
+type = 'executable',
+      attach = {
+        pidProperty = "pid",
+        pidSelect = "ask"
+      },
+      command = 'lldb-vscode', -- my binary was called 'lldb-vscode-11'
+      env = {
+        LLDB_LAUNCH_FLAG_LAUNCH_IN_TTY = "YES"
+      },
+      name = "lldb"
+}
+EOF
+
+
+" set up debugging (built in)
+
+let g:termdebug_wide = 50
+function! DebugRustBegin(exe) 
+  set signcolumn=yes
+  packadd termdebug
+  let termdebugger="rust-gdb"
+  execute "Termdebug " . a:exe
+endfunction
+
+function! HideSignColumn()
+  set signcolumn=no
+endfunction
+command! HideSignColumn call HideSignColumn()
+
+hi debugPC term=reverse ctermbg=darkblue guibg=darkblue
+hi debugBreakpoint term=reverse ctermbg=red guibg=red
+
+
+" ":Over, :Step, :Continue, :Stop, :Evaluate
+nnoremap <leader>ds :Step<cr>
+nnoremap <leader>do :Over<cr>
+nnoremap <leader>dc :Continue<cr>
+nnoremap <leader>dS :Stop<cr>
+nnoremap <leader>db :Break<cr>
+nnoremap <leader>dC :Clear<cr>
+nnoremap <leader>dr :Run<cr>
+nnoremap <leader>de :Evaluate<cr>
+
+command! DebugChess execute DebugRustBegin("target/debug/chess")
+
+
+" change the terrible default map to exit terminal mode
+tnoremap <c-e><c-t> <C-\><C-n>
