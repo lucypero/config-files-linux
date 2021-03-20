@@ -1,4 +1,6 @@
 # Basic Settings
+
+# stpv required for image previews
 set previewer ~/.config/lf/preview
 set preview true
 set hidden true
@@ -8,32 +10,37 @@ set ignorecase true
 set promptfmt " %w/%f"
 set ratios 1:1
 
-# define a custom 'open' command
-# This command is called when current file is not a directory. You may want to
-# use either file extensions and/or mime types here. Below uses an editor for
-# text files and a file opener for the rest.
+# I use my "of" script to open files here. (~/.scripts/of)
 cmd open ${{
   of "$f"
 }}
 
 cmd bulk-rename ${{
-    old="$(mktemp)"
-    new="$(mktemp)"
-    [ -n "$fs" ] && fs="$(ls)"
-    printf '%s\n' "$fs" >"$old"
-    printf '%s\n' "$fs" >"$new"
-    $EDITOR "$new"
-    [ "$(wc -l "$new")" -ne "$(wc -l "$old")" ] && exit
-    paste "$old" "$new" | while IFS= read -r names; do
-        src="$(printf '%s' "$names" | cut -f1)"
-        dst="$(printf '%s' "$names" | cut -f2)"
-        if [ "$src" = "$dst" ] || [ -e "$dst" ]; then
-            continue
-        fi
-        mv -- "$src" "$dst"
-    done
-    rm -- "$old" "$new"
-    lf -remote "send $id unselect"
+	index=$(mktemp /tmp/lf-bulk-rename-index.XXXXXXXXXX)
+	if [ -n "${fs}" ]; then
+		echo "$fs" > $index
+	else
+		echo "$(ls "$(dirname $f)" | tr ' ' "\n")" > $index
+	fi
+	index_edit=$(mktemp /tmp/lf-bulk-rename.XXXXXXXXXX)
+	cat $index > $index_edit
+	$EDITOR $index_edit
+	if [ $(cat $index | wc -l) -eq $(cat $index_edit | wc -l) ]; then
+		max=$(($(cat $index | wc -l)+1))
+		counter=1
+		while [ $counter -le $max ]; do
+			a="$(cat $index | sed "${counter}q;d")"
+			b="$(cat $index_edit | sed "${counter}q;d")"
+			counter=$(($counter+1))
+			
+			[ "$a" = "$b" ] && continue
+			[ -e "$b" ] && echo "File exists: $b" && continue
+			mv "$a" "$b"
+		done
+	else
+		echo "Number of lines must stay the same"
+	fi
+	rm $index $index_edit
 }}
 
 cmd mkdir %mkdir "$@"
@@ -42,25 +49,14 @@ map a push :mkdir<space>
 cmd rename %mv -i "$f" "$1"
 map r push :rename<space>
 
+cmd touch %touch "$@"
+map t push :touch<space> 
+
 map <delete> delete
 map <esc> quit
 
-# map d # leave the command name empty like this for unmapping
-# map dd delete
-# # Remove selected files with dD with confirmation
-# map dD ${{
-#     echo 'delete?[y/n]'
-#     read ans
-#     if [ $ans = 'y' ] then 
-#       echo 'deleting files..'
-#       rm -r $fx
-#     else
-#       echo 'cancelled.'
-#     fi
-# }}
-
 cmd test-env %{{
-  rm -p ~/.cache/lf-test
+  rm -rf ~/.cache/lf-test
   mkdir -p ~/.cache/lf-test/hi/test/test2
   touch ~/.cache/lf-test/hello \
         ~/.cache/lf-test/hello2 \
@@ -81,3 +77,91 @@ cmd test-env %{{
 
   lf -remote "send $id cd ~/.cache/lf-test"
 }}
+
+#for testing
+cmd echo-stuff %{{
+  # lf -remote "send $id set filesep \" \""
+  # lf -remote "send $id echo $fx"
+  # lf -remote "send $id set filesep \"\n\""
+  # lf -remote "send $id echo $fx"
+  printf "%s\n" "$fx" >> lf-test
+  # lf -remote "send $id echo $fx"
+}}
+
+cmd favorites-fzf ${{
+  goto_dir="$(cat ~/docs/bookmarks | fzf)"
+  lf -remote "send $id cd \"$goto_dir\""
+}}
+
+# Archive bindings
+cmd unarchive ${{
+  case "$f" in
+      *.zip) unzip "$f" ;;
+      *.tar.gz) tar -xzvf "$f" ;;
+      *.tar.bz2) tar -xjvf "$f" ;;
+      *.tar) tar -xvf "$f" ;;
+      *) echo "Unsupported format" ;;
+  esac
+}}
+
+cmd zip %{{
+  filename=$(basename -- "$f")
+  filename="${filename%.*}"
+
+  zip -r "$f.zip" "$filename"
+}}
+
+cmd tar %{{
+  filename=$(basename -- "$f")
+  filename="${filename%.*}"
+
+  tar cvf "$filename.tar" "$filename"
+}}
+
+cmd unarchive-in-subfolder ${{
+  filename=$(basename -- "$f")
+  filename="${filename%.*}"
+
+  mkdir -p "$filename"
+
+  case "$f" in
+      *.zip) unzip "$f" -d "$filename";;
+      *.tar.gz) tar -xzvf "$f" -C "$filename";;
+      *.tar.bz2) tar -xjvf "$f" -C "$filename";;
+      *.tar) tar -xvf "$f" -C "$filename";;
+      *) echo "Unsupported format" ;;
+  esac
+}}
+
+# drag and drop
+cmd dragon %dragon "$f"
+# cmd dragon %dragon-drag-and-drop -a -x $fx
+# cmd dragon-stay %dragon-drag-and-drop -a $fx
+# cmd dragon-individual %dragon-drag-and-drop $fx
+# cmd cpdragon %cpdragon
+# cmd mvdragon %mvdragon
+# cmd dlfile %dlfile
+
+cmd config-file ${{
+  $EDITOR ~/.config/lf/lfrc
+}}
+
+# seems to only work for pictures
+cmd copy-to-clipboard ${{
+
+  ft=$(file --mime-type "$f" -b)
+  case $ft in 
+    text/*) xclip -selection clipboard -i $f;;
+    *) xclip -selection clipboard -t $ft -i $f;;
+  esac 
+  # xclip -selection clipboard -t $(file --mime-type $f -b) -i $f
+}}
+
+# leader key will be '-'
+map -f favorites-fzf
+map -b bulk-rename
+map -u unarchive
+map -U unarchive-in-subfolder
+map -a tar
+map -d dragon
+map -c copy-to-clipboard

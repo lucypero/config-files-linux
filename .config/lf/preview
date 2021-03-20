@@ -1,12 +1,13 @@
 #!/bin/sh
-
 f=$1
 ft=$(file --mime-type "$f" -b)
 case $ft in
+  application/zip) unzip -l "$f";;
+  application/x-tar) tar tf "$f";;
   inode/x-empty) bat -p --color always "$f";;
   text/*) bat -p --color always "$f";;
-  # video/*) mpv "$f";;
-  # image/*) sxiv-cycle "$f";;
-  *) echo binary
+  video/*) mediainfo "$f";;
+  image/*) mediainfo "$f";;
+  *) echo preview unavailable for filetype: $ft
 esac
 

@@ -712,8 +712,8 @@ command! BD call fzf#run(fzf#wrap({
 \ }))
 
 " " buffer/window navigation
-nnoremap <leader>k :bp<cr>
-nnoremap <leader>j :bn<cr>
+nnoremap <Tab> :bn<cr>
+nnoremap <S-Tab> :bp<cr>
 
 " Run xrdb whenever Xdefaults or Xresources are updated.
 autocmd BufWritePost .Xresources,xresources,xdefaults execute "AsyncRun xrdb %"

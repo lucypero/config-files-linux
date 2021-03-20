@@ -189,6 +189,11 @@ bindkey '^p' change-dir-fzf
 #search files
 rgf() { rg --hidden --files | rg $1 }
 
+#go to favorite directory using fzf
+fav() {
+  cd "$(cat ~/docs/bookmarks | fzf)"
+}
+
 # lf colors
 export LF_COLORS="\
 ln=00:\
