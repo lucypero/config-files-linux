@@ -790,7 +790,7 @@ awful.spawn.with_shell("xrdb $HOME/.config/.Xresources")
 -- mouse sens
 awful.spawn.with_shell("chsens 0.5")
 --flashfocus
-awful.spawn.with_shell("flashfocus")
+-- awful.spawn.with_shell("flashfocus")
 
 
 -- Modyfing xmod keys and swapping escape with caps lock

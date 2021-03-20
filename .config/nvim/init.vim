@@ -317,14 +317,6 @@ endif
 nnoremap <expr> j v:count ? 'j' : 'gj'
 nnoremap <expr> k v:count ? 'k' : 'gk'
 
-" " Show current function name
-fun! ShowFuncName()
-  echohl ModeMsg
-  echo getline(search("^[^ \t#/]\\{2}.*[^:]\s*$", 'bWn'))
-  echohl None
-endfun
-map <leader>f :call ShowFuncName() <CR>
-
 " type todo - //TODO(lucypero): blabla
 nmap <leader>9 oTODO(lucypero):<ESC>gccA 
 " type note - //NOTE(lucypero): blabla
@@ -663,7 +655,7 @@ function! s:run_project()
   elseif &filetype ==# "lua"
     execute "AsyncRun lua5.3 %"
   elseif &filetype ==# "rust"
-    execute "AsyncRun cargo build"
+    execute "AsyncRun cargo run"
   endif	
 endfunction	
 
@@ -739,7 +731,10 @@ nnoremap <leader>W :SetCDToFileDir<cr>
 
 " Lf.vim config
 let g:lf_replace_netrw = 1 " Open lf when vim opens a directory
-nnoremap <leader>F :Lf<cr>
+let g:lf_map_keys = 0
+let g:lf_width = 150
+let g:lf_height = 40 
+nnoremap <leader>f :Lf<cr>
 
 "open link in browser
 function! OpenLink(link)

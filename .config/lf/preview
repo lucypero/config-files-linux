@@ -1,0 +1,12 @@
+#!/bin/sh
+
+f=$1
+ft=$(file --mime-type "$f" -b)
+case $ft in
+  inode/x-empty) bat -p --color always "$f";;
+  text/*) bat -p --color always "$f";;
+  # video/*) mpv "$f";;
+  # image/*) sxiv-cycle "$f";;
+  *) echo binary
+esac
+

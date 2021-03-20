@@ -1,12 +1,12 @@
 # Basic Settings
-# set previewer ~/.config/lf/preview
+set previewer ~/.config/lf/preview
 set preview true
 set hidden true
 set drawbox true
 set icons true
 set ignorecase true
 set promptfmt " %w/%f"
-set ratios 2:1
+set ratios 1:1
 
 # define a custom 'open' command
 # This command is called when current file is not a directory. You may want to
@@ -39,7 +39,7 @@ cmd bulk-rename ${{
 cmd mkdir %mkdir "$@"
 map a push :mkdir<space>
 
-cmd rename %mv -i $f $1
+cmd rename %mv -i "$f" "$1"
 map r push :rename<space>
 
 map <delete> delete
