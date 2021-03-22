@@ -60,6 +60,7 @@ Plug 'akinsho/nvim-bufferline.lua'
 Plug 'tpope/vim-fugitive'
 " snippets
 Plug 'honza/vim-snippets'
+" Plug 'itchyny/lightline.vim'
 
 " vim-telescope. Very promising. Still not fully done yet. Does not work well with  coc :/ so i can's search symbols
 " Plug 'nvim-lua/popup.nvim'
@@ -124,6 +125,7 @@ let s:transparent_bg = 1
 function! ToggleTransparentBG() 
   if s:transparent_bg == -1
     execute printf("colorscheme %s", s:current_colorscheme)
+    highlight StatusLine guibg=none guifg=white
   else
     highlight clear CursorLine
     highlight Normal ctermbg=none guibg=NONE
@@ -136,11 +138,15 @@ function! ToggleTransparentBG()
     highlight CursorColumn ctermbg=NONE guibg=NONE
     highlight CursorLine ctermbg=NONE guibg=NONE
     highlight CursorLineNr ctermbg=NONE guibg=NONE
-    highlight StatusLine ctermbg=NONE guibg=NONE
+    highlight StatusLine ctermbg=NONE guibg=NONE guifg=white
     highlight StatusLineNC ctermbg=NONE guibg=NONE
     highlight clear LineNr
     highlight clear SignColumn
   endif
+
+  " here you override whatever you don't like about the colorscheme
+  hi PmenuSel guibg=#e3b6e2 guifg=black
+  hi Visual guifg=black guibg=#e3b6e2
 
   let s:transparent_bg = s:transparent_bg * -1
 endfunction
@@ -661,6 +667,7 @@ endfunction
 
 " test rust project
 command! Test execute "AsyncRun cargo test"
+noremap <leader><F8> :Test<cr>
 
 "async run way
 if has("win32")	
@@ -884,3 +891,24 @@ command! DebugChess execute DebugRustBegin("target/debug/chess")
 
 " change the terrible default map to exit terminal mode
 tnoremap <c-e><c-t> <C-\><C-n>
+
+" show current function in status line
+function! CurrentFunction()
+    let currentFunctionSymbol = get(b:, 'coc_current_function', '')
+    return currentFunctionSymbol !=# '' ? '|' . currentFunctionSymbol : ''
+endfunction
+
+"status line
+set statusline=
+set statusline+=%#PmenuSel#
+set statusline+=\ NVIM\ 
+set statusline+=%#StatusLine#
+set statusline+=\ %f\ 
+set statusline+=%{CurrentFunction()}
+set statusline+=%=
+set statusline+=\ %y
+" set statusline+=\ %{&fileencoding?&fileencoding:&encoding}
+" set statusline+=\[%{&fileformat}\]
+set statusline+=\ %p%%
+set statusline+=\ %l:%c
+set statusline+=\ 
