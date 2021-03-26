@@ -43,5 +43,6 @@
   "snippets.userSnippetsDirectory": "~/.config/nvim/snippets",
   "coc.preferences.formatOnSaveFiletypes": ["rust"],
   "diagnostic.enable": false,
-  "coc.preferences.currentFunctionSymbolAutoUpdate": true
+  "coc.preferences.currentFunctionSymbolAutoUpdate": true,
+  "coc.preferences.useQuickfixForLocations": true
 }

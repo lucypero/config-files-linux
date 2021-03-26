@@ -1,0 +1,4 @@
+[Desktop Entry]
+Type=Application
+Name=lucy-startup-commands
+Exec=/home/lucy/.config/autostart-programs.sh

@@ -37,7 +37,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'Raimondi/delimitMate'
-Plug 'jremmen/vim-ripgrep'
+" Plug 'jremmen/vim-ripgrep'
 Plug 'stefandtw/quickfix-reflector.vim'
 Plug 'Tetralux/odin.vim'
 
@@ -276,12 +276,6 @@ nnoremap <leader>h :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 " Disable that annoying swap file warning
 set shortmess+=A
 
-" " Plugin Configuration ---
-
-" " vim-ripgrep config
-nnoremap <leader>r :Rg --no-ignore 
-let g:rg_highlight = 1
-
 " " shortcut for searching whatever is in the copy registry
 nnoremap <C-3> /<C-R>0<cr>
 
@@ -496,27 +490,6 @@ nnoremap <c-q> :q<cr>
 nnoremap <leader><c-q> :qa<cr>
 
 
-" ----------- Plugin Config: vim-clap  -----------
-" I went back to fzf haha
-
-" vim-clap config
-let g:clap_insert_mode_only = v:true
-let g:clap_provider_grep_opts = '-H --no-heading --vimgrep --no-ignore --smart-case'
-let g:clap_layout = { 'relative': 'editor' }
-
-let g:clap_provider_files_no_ignore = {
-   \ 'id': 'files_no_ignore',
-   \ 'source': 'rg --files --no-ignore',
-   \ 'sink': 'e',
-   \ }
-
-" vim-clap mappings
-" nnoremap <leader>O :Clap filer<cr>
-" nnoremap <leader>o :Clap files_no_ignore<cr>
-" nnoremap <leader>b :Clap buffers<cr>
-" nnoremap <leader>R :Clap grep<cr>
-
-
 " ----------- Plugin Config: CoC -----------
 
 " Some servers have issues with backup files, see #649.
@@ -559,7 +532,9 @@ function! ToggleAutoTriggerCompletion()
   " then toggle it
   let b:coc_suggest_disable = !b:coc_suggest_disable
 endfunc
-nnoremap <leader>ca :call ToggleAutoTriggerCompletion()<cr>
+nnoremap <leader>cA :call ToggleAutoTriggerCompletion()<cr>
+
+nnoremap <silent> <leader>ca :CocAction<cr>
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -665,9 +640,16 @@ function! s:run_project()
   endif	
 endfunction	
 
+function! s:test_project()
+  execute "wa"
+  if &filetype ==# "rust"
+    execute "AsyncRun cargo test"
+  endif	
+endfunction
+
 " test rust project
-command! Test execute "AsyncRun cargo test"
-noremap <leader><F8> :Test<cr>
+command! Test call s:test_project()
+noremap <silent><leader><F8> :Test<cr>
 
 "async run way
 if has("win32")	
@@ -698,8 +680,10 @@ noremap <silent> <F9> :wa<cr>:call <sid>run_file()<cr>
 nnoremap <leader>O :Clap filer<cr>
 nnoremap <leader>o :Files<cr>
 nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>R :Rg 
-let g:fzf_preview_window = []
+nnoremap <leader>r :Rg<cr>
+let g:fzf_preview_window = ['right:50%', 'ctrl-/']
+
+command! LS call fzf#run(fzf#wrap({'source': 'cat ~/docs/bookmarks'}))
 
 function! s:list_buffers()
   redir => list
@@ -867,7 +851,7 @@ function! DebugRustBegin(exe)
   hi debugBreakpoint term=reverse ctermbg=red guibg=red
   set signcolumn=yes
   packadd termdebug
-  let termdebugger="rust-gdb"
+  let g:termdebugger="rust-gdb"
   execute "Termdebug " . a:exe
 endfunction
 
@@ -903,7 +887,7 @@ set statusline=
 set statusline+=%#PmenuSel#
 set statusline+=\ NVIM\ 
 set statusline+=%#StatusLine#
-set statusline+=\ %f\ 
+set statusline+=\ %f\ %m\ 
 set statusline+=%{CurrentFunction()}
 set statusline+=%=
 set statusline+=\ %y
