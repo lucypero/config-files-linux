@@ -123,6 +123,7 @@ alias wom='man' # :^)
 alias gos='cd ~/.scripts' # to
 alias god='cd ~/dev'
 alias gon='cd ~/docs'
+alias goc='cd ~/dev/chess'
 alias b='cd ../'
 # activate python venv
 alias avenv='source .venv/bin/activate'
@@ -192,7 +193,10 @@ rgf() { rg --hidden --files | rg $1 }
 #go to favorite directory using fzf
 fav() {
   cd "$(cat ~/docs/bookmarks | fzf)"
+  zle reset-prompt
 }
+zle -N fav-dir fav
+bindkey '^f' fav-dir
 
 # lf colors
 export LF_COLORS="\

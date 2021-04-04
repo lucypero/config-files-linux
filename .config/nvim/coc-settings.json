@@ -41,8 +41,8 @@
     "enumMember": "  "
   },
   "snippets.userSnippetsDirectory": "~/.config/nvim/snippets",
-  "coc.preferences.formatOnSaveFiletypes": ["rust"],
+  "coc.preferences.formatOnSaveFiletypes": [],
   "diagnostic.enable": false,
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
-  "coc.preferences.useQuickfixForLocations": true
+  "coc.preferences.useQuickfixForLocations": false
 }

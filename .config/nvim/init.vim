@@ -58,6 +58,8 @@ Plug 'justinmk/vim-sneak'
 Plug 'kyazdani42/nvim-web-devicons' " Recommended (for coloured icons)
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'tpope/vim-fugitive'
+" Plug 'wellle/context.vim'
+" Plug 'romgrk/nvim-treesitter-context'
 " snippets
 Plug 'honza/vim-snippets'
 " Plug 'itchyny/lightline.vim'
@@ -67,28 +69,30 @@ Plug 'honza/vim-snippets'
 " Plug 'nvim-lua/plenary.nvim'
 " Plug 'nvim-telescope/telescope.nvim'
 
-Plug 'kana/vim-submode'
-Plug 'brenopacheco/vim-hydra'
 Plug 'mfussenegger/nvim-dap'
+Plug 'Shougo/echodoc.vim'
+Plug 'liuchengxu/vista.vim'
 
 call plug#end()
 
-" " gui config (no need for ginit.vim anymore)
+" " gui config and neovide config
 set linespace=1
-" set guifont=DejaVu\ Sans\ Mono:h15
-set guifont=Fira\ Code:h14
-" set guifont=Liberation\ Mono:h15
+set guifont=Fira\ Code:h16,FiraCode\ Nerd\ Font:h16
+set guifont=FiraCode\ Nerd\ Font:h16
 
-" " neovide config (Windows GUI)
+" " neovide config
 let g:neovide_fullscreen=v:false
-let g:neovide_cursor_animation_length=0
-let g:neovide_cursor_trail_length=2
 let g:neovide_cursor_vfx_mode = "wireframe"
-let g:neovide_cursor_antialiasing=v:true
+let g:neovide_transparency = 1
+let g:neovide_cursor_animation_length=0
+let g:neovide_cursor_trail_length=0
 
 " " close netrw
 autocmd FileType netrw setl bufhidden=wipe
 let g:netrw_fastbrowse = 0
+
+" " to wrap, or not to wrap?
+set nowrap " do not visually wrap the lines so they horizontally fit in the window
 
 " "  --------- THEMING  -----------
 
@@ -120,28 +124,33 @@ execute printf("colorscheme %s", s:current_colorscheme)
 
 " colorscheme summerfruit256
 
-let s:transparent_bg = 1
+let s:transparent_bg = -1
 
 function! ToggleTransparentBG() 
   if s:transparent_bg == -1
     execute printf("colorscheme %s", s:current_colorscheme)
-    highlight StatusLine guibg=none guifg=white
+    " modifications to quantum theme
+    hi StatusLine guibg=#303030 guifg=white
+    hi LineNr guifg=#aaaaaa
+    hi CursorLineNr guifg=white
+    hi Normal guibg=#333333
+    hi NormalFloat guibg=#555555
   else
-    highlight clear CursorLine
-    highlight Normal ctermbg=none guibg=NONE
-    highlight LineNr ctermbg=none guibg=NONE
-    highlight Folded ctermbg=none guibg=NONE
-    highlight NonText ctermbg=none guibg=NONE
-    highlight SpecialKey ctermbg=none guibg=NONE
-    highlight VertSplit ctermbg=none guibg=NONE
-    highlight SignColumn ctermbg=none guibg=NONE
-    highlight CursorColumn ctermbg=NONE guibg=NONE
-    highlight CursorLine ctermbg=NONE guibg=NONE
-    highlight CursorLineNr ctermbg=NONE guibg=NONE
-    highlight StatusLine ctermbg=NONE guibg=NONE guifg=white
-    highlight StatusLineNC ctermbg=NONE guibg=NONE
-    highlight clear LineNr
-    highlight clear SignColumn
+    hi clear CursorLine
+    hi Normal ctermbg=none guibg=NONE
+    hi LineNr ctermbg=none guibg=NONE
+    hi Folded ctermbg=none guibg=NONE
+    hi NonText ctermbg=none guibg=NONE
+    hi SpecialKey ctermbg=none guibg=NONE
+    hi VertSplit ctermbg=none guibg=NONE
+    hi SignColumn ctermbg=none guibg=NONE
+    hi CursorColumn ctermbg=NONE guibg=NONE
+    hi CursorLine ctermbg=NONE guibg=NONE
+    hi CursorLineNr ctermbg=NONE guibg=NONE
+    hi StatusLine ctermbg=NONE guibg=NONE guifg=white
+    hi StatusLineNC ctermbg=NONE guibg=NONE
+    hi clear LineNr
+    hi clear SignColumn
   endif
 
   " here you override whatever you don't like about the colorscheme
@@ -203,7 +212,8 @@ autocmd Filetype gdscript3 setlocal autoindent tabstop=4 shiftwidth=4 softtabsto
 " au FileType python setlocal autoindent tabstop=4 shiftwidth=4 softtabstop=4 noexpandtab
 
 " " save all shortcut
-nnoremap <leader>s :wa <cr>
+nnoremap <leader>s :w <cr>
+nnoremap <leader>S :ws <cr>
 
 " " so that i don't need to hold shift all the time
 " nnoremap ; :
@@ -313,10 +323,6 @@ if filereadable(s:path)
   runtime init.local.vim
 endif
 
-" " Visual movement by default
-nnoremap <expr> j v:count ? 'j' : 'gj'
-nnoremap <expr> k v:count ? 'k' : 'gk'
-
 " type todo - //TODO(lucypero): blabla
 nmap <leader>9 oTODO(lucypero):<ESC>gccA 
 " type note - //NOTE(lucypero): blabla
@@ -334,70 +340,6 @@ augroup END
 " disable netrw (it is bad)
 let g:loaded_netrw       = 1
 let g:loaded_netrwPlugin = 1
-
-
-" ----------- Odin stuff -----------
-
-let s:odin_location = 'C:\Users\Admin\dev\third_party\Odin'
-
-" odin errorformat
-set errorformat+=%f(%l:%c)\ %m
-
-" odin - go to definition
-fun! OdinGoToDef(identif)
-  let l:the_command = 'Rg --no-ignore -g "*.odin" ^^\s*' . a:identif . '\s*:: . ' . s:odin_location
-  let l:the_command .= ' ' . s:odin_location . '\shared'
-  " echo the_command
-  execute the_command
-endfun
-nnoremap <leader>gd yiw:call OdinGoToDef("\\b<c-r>+\\b")<cr>
-
-" odin - search odin code
-fun! OdinSearch(thing)
-  echo 'hadwhdaw'
-  let l:the_command = 'Rg -g "*.odin" ' . a:thing . ' ' . s:odin_location
-  echo the_command
-  execute the_command
-endfun
-nnoremap <leader>go :call OdinSearch("")<left><left>
-
-" odin - list all proc definitions in buffer
-fun! OdinProcs(only_in_buffer)
-    let l:the_command = 'Rg --no-ignore ^^\s*\w*\s*::\s*(?:inline)?\s*proc\('
-    if a:only_in_buffer
-      let l:the_command .= ' %'
-    endif
-    " echo the_command
-    execute the_command
-endfun
-" keymap done in the language dependent mappings section
-
-" odin - list all structs definitions in buffer
-fun! OdinStructs(only_in_buffer)
-    let l:the_command = 'Rg --no-ignore ^^\s*\w*\s*::\s*struct'
-    if a:only_in_buffer
-      let l:the_command .= ' %'
-    endif
-    " echo the_command
-    execute the_command
-endfun
-nnoremap <leader>gs :call OdinStructs(1)<cr>
-nnoremap <leader>gS :call OdinStructs(0)<cr>
-
-
-" ----------- / Odin stuff -----------
-
-" super comment - code area separator
-nmap <leader>GC o ----------- CODEAREA -----------<esc>gccfCce
-
-" list all code area separators
-fun! ListCodeSeparators()
-    let l:the_command = 'Rg --no-ignore "// ----------- .* -----------" %'
-    " echo the_command
-    execute the_command
-endfun
-" nnoremap <leader>ca : call ListCodeSeparators()<cr>
-
 
 au VimResized * wincmd =
 
@@ -469,19 +411,12 @@ swap = {
 }
 EOF
 
-
-" ----------- Filetype specific bindings -----------
-
-" odin
-au FileType odin nnoremap <buffer> <leader>gf :call OdinProcs(1)<cr>
-au FileType odin nnoremap <buffer> <leader>gF :call OdinProcs(0)<cr>
-
 " code fold config:
 " set foldmethod=expr
 " set foldexpr=nvim_treesitter#foldexpr()
 
 " to get rid of the ^M's that sometimes show up for some reason
-nnoremap <leader>Rm :e ++ff=dos<cr>
+" nnoremap <leader>Rm :e ++ff=dos<cr>
 
 " close buffer quickly
 nnoremap <c-q> :q<cr>
@@ -491,6 +426,12 @@ nnoremap <leader><c-q> :qa<cr>
 
 
 " ----------- Plugin Config: CoC -----------
+
+" coc highlight colors
+highlight CocErrorHighlight ctermfg=Red  guifg=#ff0000
+
+" set coc hints color to comment color
+highlight link CocHintSign Comment
 
 " Some servers have issues with backup files, see #649.
 set nobackup
@@ -512,12 +453,26 @@ inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
+
+inoremap <silent><expr> <cr>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ?
+      \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ "\<cr>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+
 " Use <Tab> and <S-Tab> to navigate through popup menu
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " Set completeopt to have a better completion experience
-set completeopt=menuone,noinsert,noselect
+set completeopt=menuone,noinsert
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
 " Avoid showing message extra message when using completion
@@ -535,6 +490,7 @@ endfunc
 nnoremap <leader>cA :call ToggleAutoTriggerCompletion()<cr>
 
 nnoremap <silent> <leader>ca :CocAction<cr>
+vnoremap <silent> <leader>ca :CocAction<cr>
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -588,10 +544,7 @@ imap <C-j> <Plug>(coc-snippets-expand-jump)
 
 "disable auto trigger completion
 
-
-
 " ----------- END - Plugin Config: CoC -----------
-
 
 " swapping # and * mappings because i want to use * much more often and it is harder to reach
 nnoremap # *
@@ -602,8 +555,6 @@ function! GetRuleDefinition(rule)
     let l:the_command = '/^\s*' . a:rule . '\s*:'
     execute the_command
 endfunction
-" nnoremap <leader>gR :call GetRuleDefinition("
-" nnoremap <leader>gr yiw:call GetRuleDefinition("<c-r>+")<cr>
 
 " " F10 to toggle quickfix window	
 nnoremap <F10> :call asyncrun#quickfix_toggle(15)<cr>	
@@ -625,7 +576,7 @@ function! s:run_file()
   endif	
 endfunction	
 
-function! s:run_project()	
+function! s:build_project()	
   execute "wa"	
   if &filetype ==# "python"
     execute "AsyncRun -raw python -u %"	
@@ -636,6 +587,13 @@ function! s:run_project()
   elseif &filetype ==# "lua"
     execute "AsyncRun lua5.3 %"
   elseif &filetype ==# "rust"
+    execute "AsyncRun cargo build"
+  endif	
+endfunction	
+
+function! s:run_project()	
+  execute "wa"	
+  if &filetype ==# "rust"
     execute "AsyncRun cargo run"
   endif	
 endfunction	
@@ -656,8 +614,18 @@ if has("win32")
 noremap <silent> <F8> :wa<cr>:AsyncRun build.bat<cr>	
 endif	
 if has("unix")	
-noremap <silent> <F8> :call <sid>run_project()<cr>
+noremap <silent> <F8> :call <sid>build_project()<cr>
+noremap <silent> <leader><F9> :call <sid>run_project()<cr>
 endif	
+
+" run rust clippy
+function! s:run_clippy()
+  execute "wa"
+  let l:hi = system("find . | grep \"\.rs$\" | xargs touch")
+  execute "AsyncRun cargo clippy"
+endfunction
+
+noremap <silent> <leader>Rc :call <sid>run_clippy()<cr>
 
 noremap <silent> <F9> :wa<cr>:call <sid>run_file()<cr>
 
@@ -785,45 +753,6 @@ command! TurnOffSyntaxHighlighting execute TurnOffSyntaxHighlighting()
 
 " execute TurnOffSyntaxHighlighting()
 
-
-" vim-submode config
-function! Submode_test() 
-  echomsg 'hello!'
-endfunction
-
-call submode#enter_with('debug-mode', 'n', '', '<leader>ge')
-call submode#leave_with('debug-mode', 'n', '', '<leader>gE')
-call submode#map('debug-mode', 'n', '', 'h', ':echomsg "hello"<cr>')
-
-" vim-hydra config
-
-
-function Hide_hydra(height, width)
-  return { 'row': 0, 'col': 0 }
-endfunction
-
-let s:example_hydra =
-            \ {
-            \   'name':        'example',
-            \   'title':       'Example hydra',
-            \   'show':        'none',
-            \   'exit_key':    "q",
-            \   'feed_key':    v:true,
-            \   'foreign_key': v:true,
-            \   'position': 'Hide_hydra',
-            \   'keymap': [
-            \     {
-            \       'name': 'Debug',
-            \       'keys': [
-            \         ['c', 'echomsg "continuing.."',                     'call Submode_test()'],
-            \         ['n', 'echomsg "stepping to next line.."',                     'call Submode_test()'],
-            \       ]
-            \     },
-            \   ]
-            \ }
-
-silent call hydra#hydras#register(s:example_hydra)
-
 "dap config
 
 lua << EOF
@@ -896,3 +825,23 @@ set statusline+=\ %y
 set statusline+=\ %p%%
 set statusline+=\ %l:%c
 set statusline+=\ 
+
+"vista config
+let g:vista_default_executive = 'coc'
+let g:vista_sidebar_width = 60
+let g:vista_fzf_preview = ['right:50%']
+let g:vista_ignore_kinds = ["EnumMember", "Field", "TypeParameter"]
+let g:vista_close_on_jump = 1
+let g:vista_keep_fzf_colors = 1
+let g:vista_echo_cursor = 0
+let g:vista_echo_cursor_strategy = "floating_win"
+let g:vista_blink = [0, 0]
+let g:vista_top_level_blink = [0, 0]
+nnoremap <leader>v :Vista!!<cr>
+nnoremap <leader>V :Vista finder<cr>
+
+" " vim fugitive config
+nnoremap <leader>Gs :Gstatus<cr>
+
+
+
