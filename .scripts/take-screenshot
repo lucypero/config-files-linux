@@ -1,9 +1,12 @@
 #!/bin/sh
 
-#I made this basically for timeout.. sometimes the keybind won't capture depending on where your focusing, like rofi menus, so you can call this script  with a timeout option easily for that
+# arguments: no args for full screen, s for interactive selection, and w for current window
+out_file=~/Pictures/screenshot-$(date +%F--%H:%M:%S).png
 
-#scrot arguments cheatsheet:
-# -d num = delay screenshot by [num] seconds
-# -u = screenshot active window (does not work for rofi, can't focus on it)
+case $1 in
+  s) maim_params=-s;;
+  w) maim_params="-i $(xdotool getactivewindow)";;
+  *) maim_params=;;
+esac
 
-scrot $(xdg-user-dir PICTURES)/Screenshot_%Y-%m-%d-%Hh%Mm%Ss.png -e 'xclip -selection clipboard -t image/png -i $f' $@
+eval maim $maim_params | tee $out_file | xclip -sel clip -t image/png && notify-send "Screenshot taken! 📸" "Saved to: $out_file"

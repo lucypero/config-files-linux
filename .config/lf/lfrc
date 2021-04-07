@@ -146,13 +146,13 @@ cmd config-file ${{
   $EDITOR ~/.config/lf/lfrc
 }}
 
-# seems to only work for pictures
 cmd copy-to-clipboard ${{
 
   ft=$(file --mime-type "$f" -b)
   case $ft in 
-    text/*) xclip -selection clipboard -i $f;;
-    *) xclip -selection clipboard -t $ft -i $f;;
+    image/png) xclip -sel clip -t image/png -i "$f";;
+    image/*) convert "$f" png:- | xclip -selection clipboard -t image/png;;
+    *) xclip -selection clipboard -i "$f";;
   esac 
   # xclip -selection clipboard -t $(file --mime-type $f -b) -i $f
 }}

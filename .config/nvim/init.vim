@@ -31,6 +31,7 @@ Plug 'kjssad/quantum.vim'
 Plug 'vim-scripts/eclipse.vim'
 Plug 'vim-scripts/summerfruit256.vim'
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'tssm/fairyfloss.vim'
 " rest
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
@@ -278,7 +279,7 @@ nnoremap <C-l> <C-w>l
 set scrolloff=10
 
 " unload current buffer
-noremap <leader>q :bp\|bd #<cr>
+noremap <leader>qq :bp\|bd #<cr>
 
 " switch header file <-> implementation file
 nnoremap <leader>h :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
@@ -578,6 +579,15 @@ endfunction
 
 function! s:build_project()	
   execute "wa"	
+
+  " first, check if SessionBuildProjectCommand variable is set 
+  "  if it is, then run that command
+  if exists("g:SessionBuildProjectCommand")
+    execute "AsyncRun " . g:SessionBuildProjectCommand
+    return
+  endif
+
+
   if &filetype ==# "python"
     execute "AsyncRun -raw python -u %"	
   elseif  &filetype ==# "c" || &filetype ==# "cpp"
@@ -816,7 +826,7 @@ set statusline=
 set statusline+=%#PmenuSel#
 set statusline+=\ NVIM\ 
 set statusline+=%#StatusLine#
-set statusline+=\ %f\ %m\ 
+set statusline+=\ %f\ %m\ %r\ 
 set statusline+=%{CurrentFunction()}
 set statusline+=%=
 set statusline+=\ %y
@@ -844,4 +854,17 @@ nnoremap <leader>V :Vista finder<cr>
 nnoremap <leader>Gs :Gstatus<cr>
 
 
+" " session to remember camelcase globals
+set sessionoptions+=globals
 
+" " location list mappings
+nnoremap <leader>ln :lnext<cr>
+nnoremap <leader>lp :lprevious<cr>
+nnoremap <leader>lf :lfirst<cr>
+nnoremap <leader>ll :llast<cr>
+nnoremap <leader>lo :lopen<cr>
+nnoremap <leader>lc :lclose<cr>
+
+" " quickfix list mappings
+nnoremap <leader>qf :cfirst<cr>
+nnoremap <leader>ql :clast<cr>
