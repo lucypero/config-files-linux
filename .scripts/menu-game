@@ -1,0 +1,20 @@
+#!/bin/sh
+
+#Executes the line below the selected one in rofi
+#So on even lines in $data, you have the game name
+#and on odd lines you have the command to run them
+#example of data file:
+# Game1
+# wine ~/.wine/drive_c/Game1/game1.exe
+# Game2
+# wine ~/.wine/drive_c/Game2/game2.exe
+
+data=~/docs/game-bookmarks
+
+game_name=$(sed -n 'p;n' "$data" | rofi -dmenu -i)
+line_number=$(cat "$data" | rg "^$game_name$" --column | cut -d':' -f1-1)
+line_number=$(( $line_number + 1 ))
+cmd_to_exec=$(sed "$line_number!d" "$data" )
+eval "$cmd_to_exec"
+
+
