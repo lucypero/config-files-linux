@@ -9,4 +9,4 @@ case $1 in
   *) maim_params=;;
 esac
 
-eval maim $maim_params | tee $out_file | xclip -sel clip -t image/png && notify-send "Screenshot taken! 📸" "Saved to: $out_file"
+eval maim -u $maim_params | tee $out_file | xclip -sel clip -t image/png && notify-send "Screenshot taken! 📸" "Saved to: $out_file"

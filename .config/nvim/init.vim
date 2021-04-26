@@ -55,14 +55,14 @@ Plug 'junegunn/fzf.vim'
 Plug 'ptzz/lf.vim'
 Plug 'voldikss/vim-floaterm'
 Plug 'tpope/vim-obsession'
-Plug 'justinmk/vim-sneak'
 Plug 'kyazdani42/nvim-web-devicons' " Recommended (for coloured icons)
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'tpope/vim-fugitive'
 " Plug 'wellle/context.vim'
-" Plug 'romgrk/nvim-treesitter-context'
+Plug 'romgrk/nvim-treesitter-context'
 " snippets
 Plug 'honza/vim-snippets'
+Plug 'phaazon/hop.nvim'
 " Plug 'itchyny/lightline.vim'
 
 " vim-telescope. Very promising. Still not fully done yet. Does not work well with  coc :/ so i can's search symbols
@@ -455,7 +455,7 @@ inoremap <silent><expr> <TAB>
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 
-inoremap <silent><expr> <cr>
+inoremap <silent><expr> <C-j>
       \ pumvisible() ? coc#_select_confirm() :
       \ coc#expandableOrJumpable() ?
       \ "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
@@ -507,6 +507,9 @@ nmap <silent> gr <Plug>(coc-references)
 " rename symbol
 nmap <silent> gR <Plug>(coc-rename)
 
+" format buffer
+nmap <silent> <leader>cf <Plug>(coc-format)
+
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
@@ -541,7 +544,7 @@ let g:coc_snippet_next = '<c-j>'
 " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
 let g:coc_snippet_prev = '<c-k>'
 " Use <C-j> for both expand and jump (make expand higher priority.)
-imap <C-j> <Plug>(coc-snippets-expand-jump)
+" imap <C-j> <Plug>(coc-snippets-expand-jump)
 
 "disable auto trigger completion
 
@@ -600,6 +603,13 @@ function! s:build_project()
     execute "AsyncRun cargo build"
   endif	
 endfunction	
+
+function! s:set_session_build_command(build_cmd)
+  let g:SessionBuildProjectCommand = a:build_cmd
+endfunction
+
+command! -nargs=1 SetSessionBuildCommand call s:set_session_build_command(<args>)
+" command! -nargs=1 SetSessionBuildCommand echo <q-args>
 
 function! s:run_project()	
   execute "wa"	
@@ -725,10 +735,6 @@ augroup END
 " Insert semicolon at EOL
 nnoremap <leader>; A;<esc>
 
-
-" " sneak.vim config
-let g:sneak#label = 1
-let g:sneak#use_ic_scs = 1
 
 " " Bufferline setup
 lua <<EOF
@@ -868,3 +874,6 @@ nnoremap <leader>lc :lclose<cr>
 " " quickfix list mappings
 nnoremap <leader>qf :cfirst<cr>
 nnoremap <leader>ql :clast<cr>
+
+" " hop.nvim config
+nnoremap s :HopWord<cr>

@@ -187,6 +187,8 @@ internet() {sudo ip link set enp6s0 $1}
 cdi() { cd $(find . -type d | fzf);zle reset-prompt }
 zle -N change-dir-fzf cdi
 bindkey '^p' change-dir-fzf
+#add PWD to bookmarks
+bookmark-add() { echo $PWD >> ~/docs/bookmarks }
 
 #search files
 rgf() { rg --hidden --files | rg $1 }
