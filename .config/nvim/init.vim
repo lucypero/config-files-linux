@@ -860,7 +860,7 @@ nnoremap <leader>v :Vista!!<cr>
 nnoremap <leader>V :Vista finder<cr>
 
 " " vim fugitive config
-nnoremap <leader>Gs :Gstatus<cr>
+nnoremap <leader>Gs :Git<cr>
 
 
 " " session to remember camelcase globals
