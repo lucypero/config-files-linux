@@ -127,7 +127,7 @@ alias goc='cd ~/dev/chess'
 alias b='cd ../'
 # activate python venv
 alias avenv='source .venv/bin/activate'
-alias config='/usr/bin/git --git-dir=$HOME/.cfg-repo/ --work-tree=$HOME'
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias mg='menu-game'
 
 ## font preview aliases using fontpreview-ueberzug

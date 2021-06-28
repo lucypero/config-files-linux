@@ -1,19 +1,10 @@
 " Programs Required for some stuff:
-" rg
+" rg;lf;fzf
 
-" " cool ideas to try:
-" alt+w/b to move between words in variables, like you have 'unicodeLetter' and pressing alt+w would take you to the L instead of to the next word. use that plugin u used for that
-
-" todo:
-" try out native nvim lsp server, check out if the odin server can run on it, also related:
-" https://github.com/neovim/nvim-lspconfig
-
-let g:polyglot_disabled = ['odin', 'python', 'c', 'cpp', 'json']
+let g:polyglot_disabled = ['python', 'c', 'cpp', 'json']
 
 let g:coc_global_extensions = [
-\ 'coc-pyright',
 \ 'coc-marketplace',
-\ 'coc-lua',
 \ 'coc-json',
 \ 'coc-vimlsp',
 \ 'coc-rust-analyzer'
@@ -21,17 +12,7 @@ let g:coc_global_extensions = [
 
 call plug#begin('~/.local/share/nvim/plugged')
 " color schemes
-Plug 'dracula/vim', {'as':'dracula'}
-Plug 'sainnhe/gruvbox-material'
-Plug 'gosukiwi/vim-atom-dark'
-Plug 'drewtempelmeyer/palenight.vim'
-Plug 'junegunn/seoul256.vim'
-Plug 'nightsense/strawberry'
 Plug 'kjssad/quantum.vim'
-Plug 'vim-scripts/eclipse.vim'
-Plug 'vim-scripts/summerfruit256.vim'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'tssm/fairyfloss.vim'
 " rest
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
@@ -39,8 +20,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'Raimondi/delimitMate'
 " Plug 'jremmen/vim-ripgrep'
-Plug 'stefandtw/quickfix-reflector.vim'
-Plug 'Tetralux/odin.vim'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
@@ -63,7 +42,6 @@ Plug 'romgrk/nvim-treesitter-context'
 " snippets
 Plug 'honza/vim-snippets'
 Plug 'phaazon/hop.nvim'
-" Plug 'itchyny/lightline.vim'
 
 " vim-telescope. Very promising. Still not fully done yet. Does not work well with  coc :/ so i can's search symbols
 " Plug 'nvim-lua/popup.nvim'
@@ -93,6 +71,7 @@ autocmd FileType netrw setl bufhidden=wipe
 let g:netrw_fastbrowse = 0
 
 " " to wrap, or not to wrap?
+set linebreak
 set nowrap " do not visually wrap the lines so they horizontally fit in the window
 
 " "  --------- THEMING  -----------
@@ -101,70 +80,16 @@ set nowrap " do not visually wrap the lines so they horizontally fit in the wind
 set termguicolors
 set background=dark
 
-" " dracula settings
-" let g:dracula_italic = 0
-" colorscheme dracula
+colorscheme quantum
 
-" gruvbox settings
-" let g:gruvbox_material_disable_italic_comment = 1
-" let g:gruvbox_material_enable_italic = 0
-" let g:gruvbox_material_background = 'hard'
-" colorscheme gruvbox-material
-
-
-" " palenight settings
-" colorscheme palenight
-" highlight Comment guifg=#909090
-
-" colorscheme strawberry-light
-" colorscheme atom-dark
-let s:current_colorscheme = 'quantum'
-execute printf("colorscheme %s", s:current_colorscheme)
-" colorscheme seoul256-light
-" colorscheme PaperColor
-
-" colorscheme summerfruit256
-
-let s:transparent_bg = -1
-
-function! ToggleTransparentBG() 
-  if s:transparent_bg == -1
-    execute printf("colorscheme %s", s:current_colorscheme)
-    " modifications to quantum theme
-    hi StatusLine guibg=#303030 guifg=white
-    hi LineNr guifg=#aaaaaa
-    hi CursorLineNr guifg=white
-    hi Normal guibg=#333333
-    hi NormalFloat guibg=#555555
-  else
-    hi clear CursorLine
-    hi Normal ctermbg=none guibg=NONE
-    hi LineNr ctermbg=none guibg=NONE
-    hi Folded ctermbg=none guibg=NONE
-    hi NonText ctermbg=none guibg=NONE
-    hi SpecialKey ctermbg=none guibg=NONE
-    hi VertSplit ctermbg=none guibg=NONE
-    hi SignColumn ctermbg=none guibg=NONE
-    hi CursorColumn ctermbg=NONE guibg=NONE
-    hi CursorLine ctermbg=NONE guibg=NONE
-    hi CursorLineNr ctermbg=NONE guibg=NONE
-    hi StatusLine ctermbg=NONE guibg=NONE guifg=white
-    hi StatusLineNC ctermbg=NONE guibg=NONE
-    hi clear LineNr
-    hi clear SignColumn
-  endif
-
-  " here you override whatever you don't like about the colorscheme
-  hi PmenuSel guibg=#e3b6e2 guifg=black
-  hi Visual guifg=black guibg=#e3b6e2
-
-  let s:transparent_bg = s:transparent_bg * -1
-endfunction
-call ToggleTransparentBG()
-
-command! ToggleTransparentBG call ToggleTransparentBG()
-
-" disable background override (use terminal background settings)
+" modifications to quantum theme
+hi StatusLine guibg=#303030 guifg=white
+hi LineNr guifg=#aaaaaa
+hi CursorLineNr guifg=white
+hi Normal guibg=#333333
+hi NormalFloat guibg=#555555
+hi PmenuSel guibg=#e3b6e2 guifg=black
+hi Visual guifg=black guibg=#e3b6e2
 
 let mapleader = "-"
 
@@ -176,7 +101,6 @@ set cursorline
 set relativenumber
 
 " set clipboard register to be the default register. 
-" no need for <leader>p or <leader>y anymore
 set clipboard=unnamedplus
 
 " leader p for pasting what is in the "0 register (last yank that was not a delete)
@@ -184,19 +108,6 @@ nnoremap <leader>p "0p
 nnoremap <leader>P "0P
 vnoremap <leader>p "0p
 vnoremap <leader>P "0P
-
-" " not necessary anymore (read above)
-" " " Copy to clipboard
-" vnoremap  <leader>y  "+y
-" nnoremap  <leader>Y  "+yg_
-" nnoremap  <leader>y  "+y
-" nnoremap  <leader>yy  "+yy
-
-" " " Paste from clipboard
-" nnoremap <leader>p "+p
-" nnoremap <leader>P "+P
-" vnoremap <leader>p "+p
-" vnoremap <leader>P "+P
 
 filetype plugin indent on
 set tabstop=2
@@ -214,22 +125,17 @@ autocmd Filetype gdscript3 setlocal autoindent tabstop=4 shiftwidth=4 softtabsto
 
 " " save all shortcut
 nnoremap <leader>s :w <cr>
-nnoremap <leader>S :ws <cr>
+nnoremap <leader>S :wa <cr>
 
-" " so that i don't need to hold shift all the time
-" nnoremap ; :
-" vnoremap ; :
-
-" " " regain functionality of ; (repeat last move (f/F and t/T)
-" nnoremap ; :
-" nnoremap : ;
-" vnoremap ; :
-" vnoremap : ;
+" " Swap ; and :
+nnoremap ; :
+nnoremap : ;
+vnoremap ; :
+vnoremap : ;
 
 " " see tabs and trailing characters
 " set list
 " set listchars=tab:>\ ,trail:·
-
 nnoremap <leader>w <C-w><C-w>
 
 " " mapping enter and ctrl+enter to newline insertion
@@ -286,9 +192,6 @@ nnoremap <leader>h :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 
 " Disable that annoying swap file warning
 set shortmess+=A
-
-" " shortcut for searching whatever is in the copy registry
-nnoremap <C-3> /<C-R>0<cr>
 
 " " shortcut for setting up 2 windows with the current buffer in both of them
 nnoremap <C-s> <C-W>o:vsp<cr>
@@ -862,7 +765,6 @@ nnoremap <leader>V :Vista finder<cr>
 " " vim fugitive config
 nnoremap <leader>Gs :Git<cr>
 
-
 " " session to remember camelcase globals
 set sessionoptions+=globals
 
@@ -883,3 +785,6 @@ nnoremap s :HopWord<cr>
 
 " " clear trailing whitespace
 nnoremap <leader>tw :%s/\s\+$//e<cr>
+
+" " toggle nowrap
+nnoremap <leader>nw :set nowrap!<cr>
