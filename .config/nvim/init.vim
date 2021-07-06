@@ -533,13 +533,8 @@ command! Test call s:test_project()
 " noremap <silent><leader><F8> :Test<cr>
 
 "async run way
-if has("win32")	
-noremap <silent> <F8> :wa<cr>:AsyncRun build.bat<cr>	
-endif	
-if has("unix")	
 noremap <silent> <F8> :call <sid>build_project()<cr>
 noremap <silent> <leader><F9> :call <sid>run_project()<cr>
-endif	
 
 "stop process
 noremap <silent> <leader><F8> :AsyncStop<cr>
