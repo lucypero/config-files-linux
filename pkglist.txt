@@ -3,7 +3,6 @@ automake
 base
 binutils
 bison
-breezex-cursor-theme
 cinnamon
 cmake
 dhcpcd
@@ -54,9 +53,7 @@ telegram-desktop
 texinfo
 ttf-fira-code
 vim
-whitesur-cursor-theme-git
 xclip
-xcursor-themes
 xf86-video-vesa
 xorg-bdftopcf
 xorg-docs
