@@ -55,6 +55,12 @@ setopt COMPLETE_ALIASES
 compinit
 _comp_options+=(globdots) #include hidden files
 
+# WSL stuff
+if [ $(uname -r | sed -n 's/.*\( *Microsoft *\).*/\1/ip') ];
+then
+  export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
+fi
+
 # vi mode
 bindkey -v
 export KEYTIMEOUT=1
