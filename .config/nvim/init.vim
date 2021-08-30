@@ -1,5 +1,5 @@
 " Programs Required for some stuff:
-" rg;lf;fzf
+" rg;fzf
 
 let g:polyglot_disabled = ['python', 'c', 'cpp', 'json']
 
@@ -31,14 +31,11 @@ Plug 'skywind3000/asyncrun.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 " Plug 'ap/vim-css-color'
-Plug 'ptzz/lf.vim'
-Plug 'voldikss/vim-floaterm'
 Plug 'tpope/vim-obsession'
 Plug 'kyazdani42/nvim-web-devicons' " Recommended (for coloured icons)
+Plug 'kyazdani42/nvim-tree.lua'
 Plug 'akinsho/nvim-bufferline.lua'
 Plug 'tpope/vim-fugitive'
-" Plug 'wellle/context.vim'
-Plug 'romgrk/nvim-treesitter-context'
 " snippets
 Plug 'honza/vim-snippets'
 Plug 'phaazon/hop.nvim'
@@ -56,7 +53,6 @@ call plug#end()
 
 " " gui config and neovide config
 set linespace=1
-set guifont=Fira\ Code:h16,FiraCode\ Nerd\ Font:h16
 set guifont=FiraCode\ Nerd\ Font:h16
 
 " " neovide config
@@ -90,6 +86,16 @@ hi Normal guibg=#333333
 hi NormalFloat guibg=#555555
 hi PmenuSel guibg=#e3b6e2 guifg=black
 hi Visual guifg=black guibg=#e3b6e2
+
+" disable italics
+hi Comment gui=NONE
+hi Type gui=NONE
+hi StorageClass gui=NONE
+hi elixirPseudoVariable gui=NONE
+hi jsFuncArgs gui=NONE
+hi jsThis gui=NONE
+hi jsSuper gui=NONE
+hi htmlTagName gui=NONE
 
 let mapleader = "-"
 
@@ -608,14 +614,6 @@ autocmd BufWritePost */.config/fontconfig/fonts.conf execute "AsyncRun fc-cache 
 command! SetCDToFileDir cd %:p:h
 nnoremap <leader>W :SetCDToFileDir<cr>
 
-
-" Lf.vim config
-let g:lf_replace_netrw = 1 " Open lf when vim opens a directory
-let g:lf_map_keys = 0
-let g:lf_width = 150
-let g:lf_height = 40 
-nnoremap <leader>f :Lf<cr>
-
 "open link in browser
 function! OpenLink(link)
   let l:the_command = "AsyncRun xdg-open \"" . a:link  . "\" &"
@@ -783,3 +781,6 @@ nnoremap <leader>tw :%s/\s\+$//e<cr>
 
 " " toggle nowrap
 nnoremap <leader>nw :set nowrap!<cr>
+
+" " nvim tree config
+nnoremap <leader>f :NvimTreeToggle<CR>
