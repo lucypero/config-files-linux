@@ -1,6 +1,5 @@
 " Programs Required for some stuff:
 " - rg
-" - fzf
 " - LSP servers = rust-analyzer, clangd
 
 call plug#begin('~/.local/share/nvim/plugged')
@@ -8,8 +7,6 @@ Plug 'kjssad/quantum.vim'
 Plug 'tpope/vim-commentary'
 Plug 'Raimondi/delimitMate'
 Plug 'skywind3000/asyncrun.vim'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-obsession'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
@@ -328,47 +325,16 @@ noremap <silent> <F8> :call <sid>build_project()<cr>
 "stop process
 noremap <silent> <leader><F8> :AsyncStop<cr>
 
-"" --------  Mappings and config - fzf ----------
-
-" " fzf config
-nn <leader>o :Files<cr>
-nn <leader>b :Buffers<cr>
-nn <leader>r :Rg<cr>
-let g:fzf_preview_window = ['right:50%', 'ctrl-/']
-
-command! LS call fzf#run(fzf#wrap({'source': 'cat ~/docs/bookmarks'}))
-
-function! s:list_buffers()
-  redir => list
-  silent ls
-  redir END
-  return split(list, "\n")
-endfunction
-
-function! s:delete_buffers(lines)
-  execute 'bd' join(map(a:lines, {_, line -> split(line)[0]}))
-endfunction
-
-command! BD call fzf#run(fzf#wrap({
-  \ 'source': s:list_buffers(),
-  \ 'sink*': { lines -> s:delete_buffers(lines) },
-  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
-\ }))
-
 "" --------  Mappings and config - Vista ----------
 nn <leader>v :Vista!!<cr>
-nn <leader>V :Vista finder<cr>
 let g:vista_default_executive = 'nvim_lsp'
 let g:vista_sidebar_width = 60
-let g:vista_fzf_preview = ['right:50%']
 let g:vista_ignore_kinds = ["EnumMember", "Field", "TypeParameter"]
 let g:vista_close_on_jump = 1
-let g:vista_keep_fzf_colors = 1
 let g:vista_echo_cursor = 0
 let g:vista_echo_cursor_strategy = "floating_win"
 let g:vista_blink = [0, 0]
 let g:vista_top_level_blink = [0, 0]
-
 
 "" --------  Mappings and config - Fugitive ----------
 " vim fugitive config
@@ -383,6 +349,11 @@ nn s :HopWord<cr>
 nn <leader>f :NvimTreeToggle<CR>
 
 "" --------  Mappings and config - Telescope ----------
+" search files
+nn <leader>o :Telescope find_files<cr>
+nn <leader>b :Telescope buffers<cr>
+nn <leader>r :Telescope live_grep<cr>
+
 " worskpace symbols
 nn <leader>cw :Telescope lsp_workspace_symbols<cr>
 " document symbols
