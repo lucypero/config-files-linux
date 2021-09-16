@@ -113,12 +113,13 @@ nn <leader>h :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 nn <C-s> <C-W>o:vsp<cr>
 " shortcut for going back to prev file
 nn <leader>1 <C-^>
-" go to previous error
+"" quicklist: previous, next and current
 nn <leader>[ :cp<cr>
-" go to next error
 nn <leader>] :cn<cr>
-" go to current error
 nn <leader>} :cc<cr>
+"" location list: previous, next and current
+nn <leader>g[ :lp<cr>
+nn <leader>g] :lne<cr>
 " go to vim config
 nn <leader><F3> :e $MYVIMRC<CR>
 " todo and note
@@ -190,7 +191,7 @@ nn gd <CMD>lua vim.lsp.buf.definition()<CR>
 nn M <CMD>lua vim.lsp.buf.hover()<CR>
 nn L <CMD>lua vim.lsp.buf.code_action()<CR>
 nn H <CMD>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
-nn <leader>ce, <CMD>lua vim.lsp.diagnostic.set_loclist()<CR>
+nn ge <CMD>lua vim.lsp.diagnostic.set_loclist()<CR>
 
 lua <<EOF
 local function setup_diagnostics()
