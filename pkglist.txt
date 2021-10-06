@@ -5,6 +5,7 @@ base
 binutils
 bison
 cinnamon
+clang
 cmake
 dhcpcd
 dialog
@@ -32,6 +33,7 @@ lightdm
 lightdm-gtk-greeter
 linux
 linux-firmware
+lld
 m4
 maim
 make
@@ -63,6 +65,7 @@ texinfo
 ttf-fira-code
 vi
 vim
+wget
 which
 xclip
 xf86-video-vesa

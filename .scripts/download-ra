@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# downloads latest rust analyzer bin and copies the bin file to /usr/bin
+
+pushd $HOME/.local/bin
+rm -f rust-analyzer
+curl -s https://api.github.com/repos/rust-analyzer/rust-analyzer/releases/latest \
+  | grep "browser_download_url.*x86_64-unknown-linux-gnu.gz" \
+  | cut -d : -f 2,3 \
+  | tr -d \" \
+  | wget -qi -
+gzip -d rust-analyzer-x86_64-unknown-linux-gnu.gz
+mv rust-analyzer-x86_64-unknown-linux-gnu rust-analyzer
+chmod u+x rust-analyzer
+popd
