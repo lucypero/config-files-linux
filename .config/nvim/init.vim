@@ -216,7 +216,6 @@ require('lspconfig').clangd.setup{}
 setup_diagnostics()
 EOF
 
-
 "" --------  Mappings and config - Rust Tools ----------
 lua <<EOF
 require('rust-tools').setup({})
@@ -338,15 +337,16 @@ let g:vista_blink = [0, 0]
 let g:vista_top_level_blink = [0, 0]
 
 "" --------  Mappings and config - Fugitive ----------
-" vim fugitive config
 nn <leader>Gs :Git<cr>
 
 "" --------  Mappings and config - hop.nvim ----------
-" hop.nvim config
 nn s :HopWord<cr>
 
 "" --------  Mappings and config - nvim-tree ----------
-" nvim tree config
+lua <<EOF
+require'nvim-tree'.setup()
+EOF
+
 nn <leader>f :NvimTreeToggle<CR>
 
 "" --------  Mappings and config - Telescope ----------
@@ -377,6 +377,9 @@ require'bufferline'.setup{
   }
 }
 EOF
+
+"" --------  Mappings and config - Bufferline ----------
+let g:coq_settings = { 'auto_start': v:true }
 
 "" --------  Mappings and config - delimitMate ----------
 " " delimitMate configuration
