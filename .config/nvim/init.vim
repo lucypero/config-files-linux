@@ -378,11 +378,10 @@ require'bufferline'.setup{
 }
 EOF
 
-"" --------  Mappings and config - Bufferline ----------
+"" --------  Mappings and config - Coq (autocomplete) ----------
 let g:coq_settings = { 'auto_start': v:true }
 
 "" --------  Mappings and config - delimitMate ----------
-" " delimitMate configuration
 let delimitMate_expand_cr = 1
 
 "" --------  Mappings and config - vim-obsession ----------
