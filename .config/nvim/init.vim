@@ -314,6 +314,8 @@ function! s:build_project()
     execute "AsyncRun lua5.3 %"
   elseif &filetype ==# "rust"
     execute "AsyncRun cargo build"
+  elseif &filetype ==# "haskell"
+    execute "AsyncRun runghc %"
   endif	
 endfunction	
 function! s:set_session_build_command(build_cmd)

@@ -231,3 +231,6 @@ if [ "$THEME_TYPE" = "light" ]; then
 fi
 #black font for fzf-tab (for light theme)
 enable-fzf-tab
+
+# mouse sens
+chsens 0.6
