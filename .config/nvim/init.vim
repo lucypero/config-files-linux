@@ -1,6 +1,7 @@
 " Programs Required for some stuff:
 " - rg
 " - LSP servers = rust-analyzer, clangd
+" - python3-venv (apt install --yes -- python3-venv) (for COQ)
 
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'kjssad/quantum.vim'
@@ -19,8 +20,9 @@ Plug 'liuchengxu/vista.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'neovim/nvim-lspconfig'
-Plug 'ms-jpq/coq_nvim', { 'branch': 'coq' }
 Plug 'simrat39/rust-tools.nvim'
+Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
 call plug#end()
 
 "" --------  Neovide config ----------
@@ -381,7 +383,7 @@ require'bufferline'.setup{
 EOF
 
 "" --------  Mappings and config - Coq (autocomplete) ----------
-let g:coq_settings = { 'auto_start': v:true }
+let g:coq_settings = { 'auto_start': 'shut-up' }
 
 "" --------  Mappings and config - delimitMate ----------
 let delimitMate_expand_cr = 1
