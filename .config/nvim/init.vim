@@ -17,8 +17,6 @@ Plug 'phaazon/hop.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'liuchengxu/vista.vim'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'} 
-Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'neovim/nvim-lspconfig'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
@@ -192,8 +190,8 @@ nn gi <CMD>lua vim.lsp.buf.implementation()<CR>
 nn gd <CMD>lua vim.lsp.buf.definition()<CR>
 nn M <CMD>lua vim.lsp.buf.hover()<CR>
 nn L <CMD>lua vim.lsp.buf.code_action()<CR>
-nn H <CMD>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
-nn ge <CMD>lua vim.lsp.diagnostic.set_loclist()<CR>
+nn H <CMD>lua vim.diagnostic.open_float()<CR>
+nn ge <CMD>lua vim.diagnostic.setloclist()<CR>
 
 lua <<EOF
 local function setup_diagnostics()
@@ -221,74 +219,6 @@ EOF
 "" --------  Mappings and config - Rust Tools ----------
 lua <<EOF
 require('rust-tools').setup({})
-EOF
-
-"" --------  Mappings and config - Treesitter ----------
-
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = {"c", "cpp", "json", "javascript", "go", "python", "rust", "query", "lua", "toml"},
-  highlight = {
-    enable = true,
-  },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = "gnn",
-      node_incremental = "grn",
-      scope_incremental = "rc",
-      node_decremental = "grm",
-    },
-  },
-  textobjects = {
-      select = {
-        enable = true,
-        keymaps = {
-          -- You can use the capture groups defined in textobjects.scm
-          ["af"] = "@function.outer",
-          ["if"] = "@function.inner",
-          ["ac"] = "@class.outer",
-          ["ic"] = "@class.inner",
-
-          -- Or you can define your own textobjects like this
-          ["iF"] = {
-            python = "(function_definition) @function",
-            cpp = "(function_definition) @function",
-            c = "(function_definition) @function",
-            java = "(method_declaration) @function",
-          },
-        },
-      },
-move = {
-      enable = true,
-      goto_next_start = {
-        ["]m"] = "@function.outer",
-        ["]]"] = "@class.outer",
-      },
-      goto_next_end = {
-        ["]M"] = "@function.outer",
-        ["]["] = "@class.outer",
-      },
-      goto_previous_start = {
-        ["[m"] = "@function.outer",
-        ["[["] = "@class.outer",
-      },
-      goto_previous_end = {
-        ["[M"] = "@function.outer",
-        ["[]"] = "@class.outer",
-      },
-    },
-swap = {
-      enable = true,
-      swap_next = {
-        ["<leader>a"] = "@parameter.inner",
-      },
-      swap_previous = {
-        ["<leader>A"] = "@parameter.inner",
-      },
-    },
-    },
-}
 EOF
 
 "" --------  Mappings and config - Asyncrun plugin ----------
@@ -344,6 +274,9 @@ let g:vista_top_level_blink = [0, 0]
 nn <leader>Gs :Git<cr>
 
 "" --------  Mappings and config - hop.nvim ----------
+lua <<EOF
+require'hop'.setup()
+EOF
 nn s :HopWord<cr>
 
 "" --------  Mappings and config - nvim-tree ----------
