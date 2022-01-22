@@ -192,6 +192,7 @@ nn M <CMD>lua vim.lsp.buf.hover()<CR>
 nn L <CMD>lua vim.lsp.buf.code_action()<CR>
 nn H <CMD>lua vim.diagnostic.open_float()<CR>
 nn ge <CMD>lua vim.diagnostic.setloclist()<CR>
+nn <leader>ff <cmd>lua vim.lsp.buf.formatting()<CR>
 
 lua <<EOF
 local function setup_diagnostics()
@@ -316,7 +317,7 @@ require'bufferline'.setup{
 EOF
 
 "" --------  Mappings and config - Coq (autocomplete) ----------
-let g:coq_settings = { 'auto_start': 'shut-up' }
+let g:coq_settings = { 'auto_start': 'shut-up', 'keymap': { 'jump_to_mark': '' } }
 
 "" --------  Mappings and config - delimitMate ----------
 let delimitMate_expand_cr = 1
