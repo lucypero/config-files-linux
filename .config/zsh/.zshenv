@@ -16,3 +16,4 @@ source "$HOME/.cargo/env" >/dev/null 2>&1
 
 #vulkan SDK stuff
 source "$HOME/programs/vulkan-sdk/1.2.170.0/setup-env.sh" >/dev/null 2>&1
+. "$HOME/.cargo/env"

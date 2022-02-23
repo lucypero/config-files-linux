@@ -5,6 +5,7 @@
 
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'kjssad/quantum.vim'
+Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
 Plug 'Raimondi/delimitMate'
 Plug 'skywind3000/asyncrun.vim'
@@ -84,6 +85,40 @@ hi jsFuncArgs gui=NONE
 hi jsThis gui=NONE
 hi jsSuper gui=NONE
 hi htmlTagName gui=NONE
+
+"" --------  Transparent background ----------
+
+function! AdaptColorscheme()
+   highlight clear CursorLine
+   highlight Normal ctermbg=none
+   highlight LineNr ctermbg=none
+   highlight Folded ctermbg=none
+   highlight NonText ctermbg=none
+   highlight SpecialKey ctermbg=none
+   highlight VertSplit ctermbg=none
+   highlight SignColumn ctermbg=none
+endfunction
+autocmd ColorScheme * call AdaptColorscheme()
+
+highlight Normal guibg=NONE ctermbg=NONE
+highlight CursorColumn cterm=NONE ctermbg=NONE ctermfg=NONE
+highlight CursorLine cterm=NONE ctermbg=NONE ctermfg=NONE
+highlight CursorLineNr cterm=NONE ctermbg=NONE ctermfg=NONE
+highlight clear LineNr
+highlight clear SignColumn
+highlight clear StatusLine
+
+
+" Change Color when entering Insert Mode
+autocmd InsertEnter * set nocursorline
+
+" Revert Color to default when leaving Insert Mode
+autocmd InsertLeave * set nocursorline
+
+"" extra settings, uncomment them if necessary :) 
+"set cursorline
+"set noshowmode
+set nocursorline
 
 "" --------  Mappings (no plugins) ----------
 
@@ -181,6 +216,16 @@ set statusline+=\ %y
 set statusline+=\ %p%%
 set statusline+=\ %l:%c
 set statusline+=\ 
+
+"" ----------- Clipboard fix for WSL2 ---------
+let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
+if executable(s:clip)
+    augroup WSLYank
+        autocmd!
+        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
+    augroup END
+  endif
+
 
 "" --------  Mappings and config - Nvim LSP ----------
 
@@ -285,7 +330,7 @@ lua <<EOF
 require'nvim-tree'.setup()
 EOF
 
-nn <leader>f :NvimTreeToggle<CR>
+nn <leader>F :NvimTreeToggle<CR>
 
 "" --------  Mappings and config - Telescope ----------
 " search files

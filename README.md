@@ -3,7 +3,9 @@ Configuration files for my Linux installation.
 
 I used to use AwesomeWM for a while. Shortly after I began, I realized that TWM's aren't for me. My favorite Linux DE's are Cinnamon and Gnome.
 
-I use Neovim for coding. Although recently, having to use Windows for work, I've been using Clion and VS Code (with their respective Vim bindings plugins, of course).
+I use Neovim for coding and editing text. I am inside the shell on WSL pretty much all day.
+
+Lately I am using Windows for everything. I realized I could do everything I wanted just fine on Windows. WSL2 feels just like actual Linux, and I use that for all my shell needs, using the Windows Terminal, which is actually really good.
 
 # Pictures
 
@@ -15,13 +17,9 @@ I use Neovim for coding. Although recently, having to use Windows for work, I've
 
 ![](rice-pics/cinnamon.png?raw=true)
 
-#### VS Code (Current theme: Pink Cat Boo. I switch themes a lot.)
-
-![](rice-pics/vs-code.png?raw=true)
-
 #### Neovim (Quantum theme, modified a bit)
 
-![](rice-pics/neovim.png?raw=true)
+![](rice-pics/neovim-transparent.png?raw=true)
 
 # Favorite programs
 
@@ -33,6 +31,10 @@ I use Neovim for coding. Although recently, having to use Windows for work, I've
 
 `kitty` best terminal emulator
 
+`windows terminal` surprisingly a great terminal for Windows.
+
 `rg`
 
 `mpv` for watching videos. And also for learning Japanese.
+
+`sublime-merge` for managing Git repo's

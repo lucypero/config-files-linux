@@ -135,6 +135,14 @@ alias b='cd ../'
 alias avenv='source .venv/bin/activate'
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias mg='menu-game'
+alias ex='explorer.exe .'
+
+#aliases for building godot with git bash
+GB_EXE='/mnt/c/Users/Lucy/scoop/apps/git/2.34.1.windows.1/bin/bash.exe'
+alias gb='$GB_EXE'
+alias gbg='$GB_EXE build_godot.sh'
+alias gbgd='$GB_EXE build_godot.sh -t debug -o'
+alias gbgr='$GB_EXE build_godot.sh -t release'
 
 ## font preview aliases using fontpreview-ueberzug
 
@@ -206,6 +214,14 @@ f() {
 }
 zle -N fav-dir f
 bindkey '^f' fav-dir
+#run favorite executable using fzf
+run() {
+  executable="$(cat ~/docs/exe-bookmarks | fzf)"
+  $executable
+}
+zle -N fav-exe run
+bindkey '^r' fav-exe
+
 
 # lf colors
 export LF_COLORS="\
@@ -233,4 +249,14 @@ fi
 enable-fzf-tab
 
 # mouse sens
-chsens 0.6
+#chsens 0.6
+
+# open vim in bookmark folder
+ef() { 
+  cd "$(cat ~/docs/bookmarks | fzf)"
+  $EDITOR
+}
+
+
+
+# /mnt/c/Users/Lucy/scoop/apps/git/2.34.1.windows.1/bin/bash.exe build_godot.sh -t debug -o
