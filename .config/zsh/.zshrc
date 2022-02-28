@@ -1,3 +1,4 @@
+#!/bin/sh
 #antigen stuff (plugins)
 export ANTIGEN_AUTO_CONFIG=false
 
@@ -13,12 +14,10 @@ antigen use oh-my-zsh
 antigen bundle Aloxaf/fzf-tab
 antigen bundle last-working-dir
 antigen apply
-
-#adioawdjiowa
-
 #antigen end
 
-#!/bin/sh
+#golang stuff
+export GO111MODULE=on
 
 THEME_TYPE=dark
 
@@ -134,6 +133,7 @@ alias b='cd ../'
 # activate python venv
 alias avenv='source .venv/bin/activate'
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias lconfig='lazygit --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias mg='menu-game'
 alias ex='explorer.exe .'
 
@@ -187,6 +187,8 @@ fi
 ec() { rg --hidden --files ~/.scripts ~/.config | fzf | xargs -r $EDITOR ;}
 #edit zshrc
 ecz() { $EDITOR ~/.config/zsh/.zshrc }
+#edit bookmarks
+ecb() { $EDITOR ~/docs/bookmarks }
 #edit vim config
 ecv() { $EDITOR ~/.config/nvim/init.vim }
 #edit awesome config

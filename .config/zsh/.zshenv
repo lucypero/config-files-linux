@@ -1,7 +1,7 @@
 #env vars
 export ZDOTDIR="$HOME/.config/zsh"
 
-export PATH=$HOME/.cargo/bin:$PATH:~/.local/bin:~/.scripts
+export PATH=$HOME/.cargo/bin:$PATH:~/.local/bin:~/.scripts:/usr/local/go/bin:$HOME/go/bin
 export EDITOR=nvim
 export BROWSER=brave
 export TERMINAL=kitty
