@@ -134,6 +134,7 @@ alias b='cd ../'
 alias avenv='source .venv/bin/activate'
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias lconfig='lazygit --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias lg='lazygit'
 alias mg='menu-game'
 alias ex='explorer.exe .'
 
