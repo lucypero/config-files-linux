@@ -6,6 +6,7 @@ case $ft in
   application/x-tar) tar tf "$f";;
   inode/x-empty) bat -p --color always "$f";;
   text/*) bat -p --color always "$f";;
+  application/json) bat -p --color always "$f";;
   video/*) mediainfo "$f";;
   image/*) mediainfo "$f";;
   *) echo preview unavailable for filetype: $ft

@@ -3,11 +3,18 @@
 
 f=$1
 ft=$(file --mime-type "$f" -b)
+
 case $ft in
   inode/x-empty) $EDITOR "$f";;
   text/*) $EDITOR "$f";;
-  video/*) mpv "$f";;
+  application/json) $EDITOR "$f";;
+  video/*) 
+    if grep -qi microsoft /proc/version; then 
+      mpv.exe "$(wslpath -w "$f")"
+    else 
+      mpv "$f"
+    fi
+    ;;
   image/*) sxiv-cycle "$f";;
   *) echo "I don't know how to open the file \"$f\" of type: $ft"
 esac
-
