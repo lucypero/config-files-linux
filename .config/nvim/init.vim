@@ -7,7 +7,6 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'kjssad/quantum.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-commentary'
-Plug 'Raimondi/delimitMate'
 Plug 'skywind3000/asyncrun.vim'
 Plug 'tpope/vim-obsession'
 Plug 'kyazdani42/nvim-web-devicons'
@@ -349,6 +348,8 @@ nn <F10> :call asyncrun#quickfix_toggle(15)<cr>
 function! s:build_project()	
   execute "wa"	
 
+  execute "AsyncStop"
+
   " first, check if SessionBuildProjectCommand variable is set 
   "  if it is, then run that command
   if exists("g:SessionBuildProjectCommand")
@@ -452,10 +453,19 @@ require'bufferline'.setup{
 EOF
 
 "" --------  Mappings and config - Coq (autocomplete) ----------
-let g:coq_settings = { 'auto_start': 'shut-up', 'keymap': { 'jump_to_mark': '' } }
+let g:coq_settings = {
+      \ 'auto_start': 'shut-up',
+      \ 'keymap.manual_complete': '<C-Space>',
+      \ 'keymap.jump_to_mark': '<C-j>',
+      \ 'keymap.bigger_preview': '<C-k>',
+      \ 'keymap.repeat': '',
+      \ 'keymap.eval_snips': '',
+      \ }
 
-"" --------  Mappings and config - delimitMate ----------
-let delimitMate_expand_cr = 1
+ino <silent><expr> <Esc> pumvisible() ? "\<C-e><Esc>" : "\<Esc>"
+ino <silent><expr> <C-c> pumvisible() ? "\<C-e><C-c>" : "\<C-c>"
+ino <silent><expr> <BS> pumvisible() ? "\<C-e><BS>" : "\<BS>"
+ino <silent><expr> <CR> pumvisible() ? (complete_info().selected == -1 ? "\<C-e><CR>" : "\<C-y>") : "\<CR>"
 
 "" --------  Mappings and config - vim-obsession ----------
 " Autoload sessions created by tpope's vim-obsession when starting Vim.
