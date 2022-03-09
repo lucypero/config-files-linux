@@ -138,12 +138,11 @@ alias lg='lazygit'
 alias mg='menu-game'
 alias ex='explorer.exe .'
 
-#aliases for building godot with git bash
-GB_EXE='/mnt/c/Users/Lucy/scoop/apps/git/2.34.1.windows.1/bin/bash.exe'
-alias gb='$GB_EXE'
-alias gbg='$GB_EXE build_godot.sh'
-alias gbgd='$GB_EXE build_godot.sh -t debug -o'
-alias gbgr='$GB_EXE build_godot.sh -t release'
+# aliases for building godot
+alias gb='./build_godot.sh'
+alias gbd='./build_godot.sh -t debug -o'
+alias gbr='./build_godot.sh -t release'
+alias gbg='./build_godot.sh -t debug -f'
 
 # aliases for nix-env
 alias nei='nix-env -i'
