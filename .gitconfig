@@ -3,5 +3,3 @@
 	name = Lucy
 [init]
 	defaultBranch = main
-[credential]
-	helper = libsecret
