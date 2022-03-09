@@ -145,6 +145,10 @@ alias gbg='$GB_EXE build_godot.sh'
 alias gbgd='$GB_EXE build_godot.sh -t debug -o'
 alias gbgr='$GB_EXE build_godot.sh -t release'
 
+# aliases for nix-env
+alias nei='nix-env -i'
+alias neq='nix-env --query | cat'
+
 ## font preview aliases using fontpreview-ueberzug
 
 #running it straight from git repo to test the new feature i requested
