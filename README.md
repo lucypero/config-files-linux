@@ -5,7 +5,9 @@ I used to use AwesomeWM for a while. Shortly after I began, I realized that TWM'
 
 I use Neovim for coding and editing text. I am inside the shell on WSL pretty much all day.
 
-Lately I am using Windows for everything. I realized I could do everything I wanted just fine on Windows. WSL2 feels just like actual Linux, and I use that for all my shell needs, using the Windows Terminal, which is actually really good.
+Lately I am using Windows for everything, with WSL. I realized I could do everything I wanted just fine on Windows. WSL2 feels just like actual Linux, and I use that for all my shell needs, using the Windows Terminal, which is actually really good.
+
+I use Ubuntu WSL but I use the Nix package manager for installing programs. Nix has the most impressive list of updated programs on their repositories that I've seen.
 
 # Pictures
 
@@ -38,3 +40,7 @@ Lately I am using Windows for everything. I realized I could do everything I wan
 `mpv` for watching videos. And also for learning Japanese.
 
 `sublime-merge` for managing Git repo's
+
+`nix-env` Nix package manager as my favorite package manager.
+
+`scoop` (Windows) package manager for Windows programs.
