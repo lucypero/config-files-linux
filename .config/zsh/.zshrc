@@ -1,25 +1,14 @@
 #!/bin/sh
-#antigen stuff (plugins)
 export ANTIGEN_AUTO_CONFIG=false
 
 source ~/.config/zsh/antigen.zsh
-
-# Load the oh-my-zsh's library.
 antigen use oh-my-zsh
-
-# about these following 2 plugins: I'm not feeling them. I don't see how they help me
-#    and they make the shell look uglier IMO
-# antigen bundle zsh-users/zsh-autosuggestions
-# antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle Aloxaf/fzf-tab
 antigen bundle last-working-dir
 antigen apply
-#antigen end
 
 #golang stuff
 export GO111MODULE=on
-
-THEME_TYPE=dark
 
 autoload -Uz promptinit
 autoload -U colors && colors
@@ -104,17 +93,20 @@ lfcd () {
 }
 bindkey -s '^o' 'lfcd\n'
 
+# Truncates path for the prompt
+pwd_t() {
+  V=$(pwd)
+  max_len=35
 
-if [ "$THEME_TYPE" = "light" ]; then
-  PROMPT='%B%F{212}[%f%b%B%F{212}%n%f%b %B%~%b%B%F{212}]%(!.#.$)%f%b '
-elif [ "$THEME_TYPE" = "dark" ]; then
-  PROMPT='%B%F{219}[%f%b%B%F{219}%n%f%b %B%~%b%B%F{219}]%(!.#.$)%f%b '
-fi
+  if [ ${#V} -ge $max_len ]
+  then
+    echo "(...)${V: -$max_len}"
+  else
+    echo ${V}
+  fi
+}
 
-
-
-#set bat as manpager
-# export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+PROMPT='%B%F{219}[%f%b%B%F{219}%n%f%b %B$(pwd_t)%B%F{219}]%(!.#.$)%f%b '
 
 ### aliases
 alias e='$EDITOR'
@@ -179,11 +171,7 @@ export FZF_DEFAULT_COMMAND="rg --files --hidden -g'!.git'"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 # fzf colors
-if [ "$THEME_TYPE" = "light" ]; then
-  export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --color=hl:#ff69f5,fg:#000000,fg+:#000000,hl:#000000,hl+:#ff69f5,info:#ff69f5,prompt:#ff69f5,pointer:#ff91f0,marker:-1,spinner:#ff69f5,header:#ff69f5,bg:-1,bg+:-1,info:#000000'
-elif [ "$THEME_TYPE" = "dark" ]; then
-  export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --color=hl:#ffb8f6,fg+:-1,hl+:#ffb8f6,info:#ffb8f6,prompt:#ffb8f6,pointer:#ff91f0,marker:-1,spinner:#ffb8f6,header:#ffb8f6,bg:-1,bg+:-1'
-fi
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --color=hl:#ffb8f6,fg+:-1,hl+:#ffb8f6,info:#ffb8f6,prompt:#ffb8f6,pointer:#ff91f0,marker:-1,spinner:#ffb8f6,header:#ffb8f6,bg:-1,bg+:-1'
 
 #functions for convenience
 
@@ -248,9 +236,6 @@ ex=00:\
 fi=00:\
 "
 
-if [ "$THEME_TYPE" = "light" ]; then
-  zstyle ':fzf-tab:*' default-color $'\033[38;5;0m'
-fi
 #black font for fzf-tab (for light theme)
 enable-fzf-tab
 

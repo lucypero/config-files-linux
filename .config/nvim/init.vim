@@ -456,7 +456,7 @@ EOF
 let g:coq_settings = {
       \ 'auto_start': 'shut-up',
       \ 'keymap.manual_complete': '<C-Space>',
-      \ 'keymap.jump_to_mark': '<C-j>',
+      \ 'keymap.jump_to_mark': '',
       \ 'keymap.bigger_preview': '<C-k>',
       \ 'keymap.repeat': '',
       \ 'keymap.eval_snips': '',
