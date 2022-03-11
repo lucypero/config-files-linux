@@ -148,7 +148,7 @@ nn <C-l> <C-w>l
 " unload current buffer
 nn <leader>qq :bp\|bd #<cr>
 " switch header file <-> implementation file
-nn <leader>h :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
+nn <leader>H :e %:p:s,.h$,.X123X,:s,.cpp$,.h,:s,.X123X$,.cpp,<CR>
 " shortcut for setting up 2 windows with the current buffer in both of them
 nn <C-s> <C-W>o:vsp<cr>
 " shortcut for going back to prev file
@@ -408,23 +408,34 @@ EOF
 nn <leader>F :NvimTreeToggle<CR>
 
 "" --------  Mappings and config - Telescope ----------
-" search files
-nn <leader>o :Telescope find_files<cr>
-nn <leader>b :Telescope buffers<cr>
-nn <leader>r :Telescope live_grep<cr>
-
-" worskpace symbols
-nn <leader>cw :Telescope lsp_workspace_symbols<cr>
-" document symbols
-nn <leader>cp :Telescope lsp_document_symbols<cr>
-
 lua <<EOF
 local actions = require("telescope.actions")
+local builtin = require("telescope.builtin")
+local themes = require("telescope.themes")
 local delete_buffers = function(prompt_bufnr)
    actions.smart_send_to_qflist(prompt_bufnr)
    vim.api.nvim_command('cfdo :bd')
 end
 
+local nn = function(lhs, rhs)
+  vim.api.nvim_set_keymap('n', lhs, rhs, {noremap = true})
+end
+
+local t_str = function(mode, theme)
+   return ":lua require('telescope.builtin')."..mode.."(require('telescope.themes').get_"..theme.."())<cr>"
+end
+
+-- telescope related mappings
+local my_theme = 'ivy'
+
+nn('<leader>o', t_str('find_files', my_theme))
+nn('<leader>b', t_str('buffers', my_theme))
+nn('<leader>r', t_str('live_grep', my_theme))
+nn('<leader>cw', t_str('lsp_workspace_symbols', my_theme))
+nn('<leader>cp', t_str('lsp_document_symbols', my_theme))
+nn('<leader>h', t_str('help_tags', my_theme))
+
+-- telescope settings and mappings (inside telescope)
 require('telescope').setup{
 defaults = {
   layout_strategy = "horizontal",
