@@ -162,11 +162,10 @@ nn <leader>g[ :lp<cr>
 nn <leader>g] :lne<cr>
 " go to vim config
 nn <leader><F3> :e $MYVIMRC<CR>
+nn <leader><F4> :e ~/.config/nvim/lua<CR>
 " todo and note
 nmap <leader>9 oTODO(lucypero):<ESC>gccA 
 nmap <leader>0 oNOTE(lucypero):<ESC>gccA 
-" unload buffer
-nn <leader>D :bd<cr>
 " close buffer quickly
 nn <c-q> :q<cr>
 " quit vim
@@ -412,28 +411,22 @@ lua <<EOF
 local actions = require("telescope.actions")
 local builtin = require("telescope.builtin")
 local themes = require("telescope.themes")
+local l = require('lucy')
+
 local delete_buffers = function(prompt_bufnr)
    actions.smart_send_to_qflist(prompt_bufnr)
    vim.api.nvim_command('cfdo :bd')
 end
 
-local nn = function(lhs, rhs)
-  vim.api.nvim_set_keymap('n', lhs, rhs, {noremap = true})
-end
-
-local t_str = function(mode, theme)
-   return ":lua require('telescope.builtin')."..mode.."(require('telescope.themes').get_"..theme.."())<cr>"
-end
-
 -- telescope related mappings
-local my_theme = 'ivy'
-
-nn('<leader>o', t_str('find_files', my_theme))
-nn('<leader>b', t_str('buffers', my_theme))
-nn('<leader>r', t_str('live_grep', my_theme))
-nn('<leader>cw', t_str('lsp_workspace_symbols', my_theme))
-nn('<leader>cp', t_str('lsp_document_symbols', my_theme))
-nn('<leader>h', t_str('help_tags', my_theme))
+l.nn('<leader>o', ":lua require('lucy').t_cmd('find_files')<cr>")
+l.nn('<leader>b', ":lua require('lucy').t_cmd('buffers')<cr>")
+l.nn('<leader>r', ":lua require('lucy').t_cmd('live_grep')<cr>")
+l.nn('<leader>cw', ":lua require('lucy').t_cmd('lsp_workspace_symbols')<cr>")
+l.nn('<leader>cp', ":lua require('lucy').t_cmd('lsp_document_symbols')<cr>")
+l.nn('<leader>h', ":lua require('lucy').t_cmd('help_tags')<cr>")
+l.nn('<leader>d', ":lua require('lucy').t_cmd('diagnostics', {bufnr = 0})<cr>")
+l.nn('<leader>D', ":lua require('lucy').t_cmd('diagnostics')<cr>")
 
 -- telescope settings and mappings (inside telescope)
 require('telescope').setup{
