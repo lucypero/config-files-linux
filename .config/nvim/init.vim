@@ -1,7 +1,8 @@
 " Programs Required for some stuff:
 " - rg
 " - LSP servers = rust-analyzer, clangd, typescript-language-server
-" - python3-venv (apt install --yes -- python3-venv) (for COQ)
+" - (for COQ) python3-venv (apt install --yes -- python3-venv)
+" - (for cute block comments) figlet and boxes
 
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'kjssad/quantum.vim'
@@ -65,10 +66,9 @@ set splitbelow splitright
 set scrolloff=10
 set shortmess+=A
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
 " " session to remember camelcase globals
 set sessionoptions+=globals
-
-
 
 "" --------  Theming ----------
 colorscheme quantum
@@ -199,6 +199,18 @@ nn <silent> <C-\> :terminal<cr>
 nn <silent> <A-\> :terminal<cr>
 tno <silent> <C-\> <C-\><C-n>
 tno <silent> <A-\> <C-\><C-n>
+
+"" --------  Commands ----------
+
+function! s:cute_block_comment(text)
+  execute "r !figlet " . a:text . " | boxes"
+endfunction
+command! -nargs=1 CuteBlockComment call s:cute_block_comment(<args>)
+
+function! s:smol_block_comment(text)
+  execute "r !echo " . a:text . " | boxes"
+endfunction
+command! -nargs=1 SmolBlockComment call s:smol_block_comment(<args>)
 
 function! Scratch()
     execute "e scratch"

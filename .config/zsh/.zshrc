@@ -247,7 +247,3 @@ ef() {
   cd "$(cat ~/docs/bookmarks | fzf)"
   $EDITOR
 }
-
-
-
-# /mnt/c/Users/Lucy/scoop/apps/git/2.34.1.windows.1/bin/bash.exe build_godot.sh -t debug -o
