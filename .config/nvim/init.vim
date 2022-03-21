@@ -4,71 +4,75 @@
 " - (for COQ) python3-venv (apt install --yes -- python3-venv)
 " - (for cute block comments) figlet and boxes
 
-call plug#begin('~/.local/share/nvim/plugged')
-Plug 'kjssad/quantum.vim'
-Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-commentary'
-Plug 'skywind3000/asyncrun.vim'
-Plug 'tpope/vim-obsession'
-Plug 'kyazdani42/nvim-web-devicons'
-Plug 'kyazdani42/nvim-tree.lua'
-Plug 'akinsho/nvim-bufferline.lua'
-Plug 'tpope/vim-fugitive'
-Plug 'phaazon/hop.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'liuchengxu/vista.vim'
-Plug 'neovim/nvim-lspconfig'
-Plug 'simrat39/rust-tools.nvim'
-Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
-Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
+lua <<EOF
+require('packer').startup(function()
+   use 'wbthomason/packer.nvim'
+   use 'kjssad/quantum.vim'
+   use 'sheerun/vim-polyglot'
+   use 'tpope/vim-commentary'
+   use 'skywind3000/asyncrun.vim'
+   use 'tpope/vim-obsession'
+   use 'kyazdani42/nvim-web-devicons'
+   use 'kyazdani42/nvim-tree.lua'
+   use 'akinsho/nvim-bufferline.lua'
+   use 'tpope/vim-fugitive'
+   use 'phaazon/hop.nvim'
+   use {
+     'nvim-telescope/telescope.nvim',
+     requires = { {'nvim-lua/plenary.nvim'} }
+   }
+   use 'liuchengxu/vista.vim'
+   use 'neovim/nvim-lspconfig'
+   use 'simrat39/rust-tools.nvim'
+   use {'ms-jpq/coq_nvim', branch = 'coq'}
+   use {'ms-jpq/coq.artifacts', branch = 'artifacts'}
+   use 'windwp/nvim-autopairs'
 
-" Ts stuff
-Plug 'jose-elias-alvarez/null-ls.nvim'
-Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
-call plug#end()
+-- Ts stuff
+   use 'jose-elias-alvarez/null-ls.nvim'
+   use 'jose-elias-alvarez/nvim-lsp-ts-utils'
+end)
 
-"" --------  Neovide config ----------
-let g:neovide_fullscreen=v:false
-let g:neovide_cursor_vfx_mode = "wireframe"
-let g:neovide_transparency = 1
-let g:neovide_cursor_animation_length=0
-let g:neovide_cursor_trail_length=0
+-- reload lucy
+require('plenary.reload').reload_module('lucy', true)
+EOF
 
 "" --------  Vim Set's ----------
 " " disable netrw (it is bad)
 autocmd FileType netrw setl bufhidden=wipe
-let g:loaded_netrw       = 1
-let g:loaded_netrwPlugin = 1
-au VimResized * wincmd =
-set linespace=1
-set guifont=FiraCode\ Nerd\ Font:h16
-let g:netrw_fastbrowse = 0
-set linebreak
-set nowrap
-set termguicolors
-set background=dark
-let mapleader = "-"
-set title
-set cursorline
-set relativenumber
-set clipboard=unnamedplus
-filetype plugin indent on
-set tabstop=2
-set shiftwidth=2
-set expandtab
-set hidden
-set mouse=a
-set formatoptions-=cro
-set ignorecase
-set smartcase
-set splitbelow splitright
-set scrolloff=10
-set shortmess+=A
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-" " session to remember camelcase globals
-set sessionoptions+=globals
+lua <<EOF
+vim.g.loaded_netrw       = 1
+vim.g.loaded_netrwPlugin = 1
+vim.o.linespace=1
+vim.o.guifont="FiraCode Nerd Font:h16"
+vim.g.netrw_fastbrowse = 0
+vim.o.linebreak = true
+vim.o.wrap = false
+vim.o.termguicolors = true
+vim.o.background="dark"
+vim.g.mapleader = "-"
+vim.o.title = true
+vim.o.cursorline = true
+vim.o.relativenumber = true
+vim.o.clipboard="unnamedplus"
+vim.o.tabstop=2
+vim.o.shiftwidth=2
+vim.o.expandtab = true
+vim.o.hidden = true
+vim.o.mouse='a'
+vim.opt.formatoptions:remove('cro')
+vim.o.ignorecase = true
+vim.o.smartcase = true
+vim.o.splitbelow = true
+vim.o.splitright = true
+vim.o.scrolloff=10
+vim.opt.shortmess:append('A')
+vim.opt.sessionoptions:append('globals')
+EOF
+au VimResized * wincmd =
+filetype plugin indent on
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 "" --------  Theming ----------
 colorscheme quantum
@@ -195,10 +199,8 @@ nn <leader>ql :clast<cr>
 nn <leader>nw :set nowrap!<cr>
 
 " " Terminal
-nn <silent> <C-\> :terminal<cr>
-nn <silent> <A-\> :terminal<cr>
-tno <silent> <C-\> <C-\><C-n>
-tno <silent> <A-\> <C-\><C-n>
+nn <silent> <C-\> :terminal<cr>i
+tno <silent> <C-\> <C-\><C-n>:bd!<cr>
 
 "" --------  Commands ----------
 
@@ -212,14 +214,7 @@ function! s:smol_block_comment(text)
 endfunction
 command! -nargs=1 SmolBlockComment call s:smol_block_comment(<args>)
 
-function! Scratch()
-    execute "e scratch"
-    execute "setlocal buftype=nofile"
-    execute "setlocal bufhidden=hide"
-    execute "setlocal noswapfile"
-endfunction
-
-command! Scratch execute Scratch()
+command! Scratch lua require'lucy'.makeScratch()
 
 " source vimrc when saving
 augroup reload_vimrc
@@ -482,6 +477,47 @@ ino <silent><expr> <Esc> pumvisible() ? "\<C-e><Esc>" : "\<Esc>"
 ino <silent><expr> <C-c> pumvisible() ? "\<C-e><C-c>" : "\<C-c>"
 ino <silent><expr> <BS> pumvisible() ? "\<C-e><BS>" : "\<BS>"
 ino <silent><expr> <CR> pumvisible() ? (complete_info().selected == -1 ? "\<C-e><CR>" : "\<C-y>") : "\<CR>"
+
+"" --------  Mappings and config - nvim-autopairs ----------
+lua <<EOF
+local remap = vim.api.nvim_set_keymap
+local npairs = require('nvim-autopairs')
+
+npairs.setup({ map_bs = false, map_cr = false })
+
+vim.g.coq_settings = { keymap = { recommended = false } }
+
+-- these mappings are coq recommended mappings unrelated to nvim-autopairs
+remap('i', '<esc>', [[pumvisible() ? "<c-e><esc>" : "<esc>"]], { expr = true, noremap = true })
+remap('i', '<c-c>', [[pumvisible() ? "<c-e><c-c>" : "<c-c>"]], { expr = true, noremap = true })
+remap('i', '<tab>', [[pumvisible() ? "<c-n>" : "<tab>"]], { expr = true, noremap = true })
+remap('i', '<s-tab>', [[pumvisible() ? "<c-p>" : "<bs>"]], { expr = true, noremap = true })
+
+-- skip it, if you use another global object
+_G.MUtils= {}
+
+MUtils.CR = function()
+  if vim.fn.pumvisible() ~= 0 then
+    if vim.fn.complete_info({ 'selected' }).selected ~= -1 then
+      return npairs.esc('<c-y>')
+    else
+      return npairs.esc('<c-e>') .. npairs.autopairs_cr()
+    end
+  else
+    return npairs.autopairs_cr()
+  end
+end
+remap('i', '<cr>', 'v:lua.MUtils.CR()', { expr = true, noremap = true })
+
+MUtils.BS = function()
+  if vim.fn.pumvisible() ~= 0 and vim.fn.complete_info({ 'mode' }).mode == 'eval' then
+    return npairs.esc('<c-e>') .. npairs.autopairs_bs()
+  else
+    return npairs.autopairs_bs()
+  end
+end
+remap('i', '<bs>', 'v:lua.MUtils.BS()', { expr = true, noremap = true })
+EOF
 
 "" --------  Mappings and config - vim-obsession ----------
 " Autoload sessions created by tpope's vim-obsession when starting Vim.

@@ -1,3 +1,4 @@
+local api = vim.api
 local lucy = {}
 
 -- Table to string
@@ -15,7 +16,14 @@ function lucy.dump(o)
 end
 
 function lucy.nn(lhs, rhs)
-  vim.api.nvim_set_keymap('n', lhs, rhs, {noremap = true})
+  api.nvim_set_keymap('n', lhs, rhs, {noremap = true})
+end
+
+function lucy.makeScratch()
+  api.nvim_command('enew')
+  vim.bo.buftype = "nofile"
+  vim.bo.bufhidden = "hide"
+  vim.bo.swapfile = false
 end
 
 ------------------- Telescope ------------------

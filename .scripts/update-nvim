@@ -1,0 +1,3 @@
+#!/bin/sh
+wget https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.deb -O /tmp/nvim-linux64.deb
+dpkg -i /tmp/nvim-linux64.deb

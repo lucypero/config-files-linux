@@ -136,9 +136,7 @@ alias gbd='./build_godot.sh -t debug -o'
 alias gbr='./build_godot.sh -t release'
 alias gbg='./build_godot.sh -t debug -f'
 
-# aliases for nix-env
-alias nei='nix-env -i'
-alias neq='nix-env --query | cat'
+alias un='sudo $HOME/.scripts/update-nvim'
 
 ## font preview aliases using fontpreview-ueberzug
 
