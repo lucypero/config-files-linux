@@ -31,10 +31,12 @@ require('packer').startup(function()
    use {'ms-jpq/coq_nvim', branch = 'coq'}
    use {'ms-jpq/coq.artifacts', branch = 'artifacts'}
    use 'windwp/nvim-autopairs'
+   use 'ray-x/lsp_signature.nvim'
 
 -- Ts stuff
    use 'jose-elias-alvarez/null-ls.nvim'
    use 'jose-elias-alvarez/nvim-lsp-ts-utils'
+   use 'tpope/vim-scriptease'
 end)
 
 EOF
@@ -84,9 +86,13 @@ hi StatusLine guibg=#252525 guifg=white
 hi LineNr guifg=#aaaaaa
 hi CursorLineNr guifg=white
 hi Normal guibg=#252525
-hi NormalFloat guibg=#555555
-hi PmenuSel guibg=#e3b6e2 guifg=black
 hi Visual guifg=black guibg=#e3b6e2
+hi LspSignatureActiveParameter guibg=#e3b6e2 guifg=black
+hi Pmenu guibg=NONE guifg=#dddddd
+hi PmenuSel guibg=#e3b6e2 guifg=black
+hi NormalFloat guibg=NONE guifg=#dddddd
+hi VertSplit guifg=#e3b6e2
+
 " " disable italics
 hi Comment gui=NONE
 hi Type gui=NONE
@@ -118,7 +124,6 @@ highlight CursorLineNr cterm=NONE ctermbg=NONE ctermfg=NONE
 highlight clear LineNr
 highlight clear SignColumn
 highlight clear StatusLine
-
 
 " Change Color when entering Insert Mode
 autocmd InsertEnter * set nocursorline
@@ -511,6 +516,16 @@ MUtils.BS = function()
   end
 end
 remap('i', '<bs>', 'v:lua.MUtils.BS()', { expr = true, noremap = true })
+EOF
+
+"" --------  Mappings and config - lsp_signature ----------
+lua << EOF
+require "lsp_signature".setup({
+   bind = true,
+   handler_opts = {
+      border = "rounded"
+   },
+})
 EOF
 
 "" --------  Mappings and config - vim-obsession ----------
