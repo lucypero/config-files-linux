@@ -177,6 +177,8 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --color=hl:#ffb8f6,fg+:-1,hl+:#ffb8f6
 ec() { rg --hidden --files ~/.scripts ~/.config | fzf | xargs -r $EDITOR ;}
 #edit zshrc
 ecz() { $EDITOR ~/.config/zsh/.zshrc }
+#edit wezterm
+ecw() { $EDITOR /mnt/c/Users/Lucy/.config/wezterm/wezterm.lua }
 #edit bookmarks
 ecb() { $EDITOR ~/docs/bookmarks }
 #edit vim config

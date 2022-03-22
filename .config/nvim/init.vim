@@ -5,6 +5,10 @@
 " - (for cute block comments) figlet and boxes
 
 lua <<EOF
+
+-- reload lucy
+require('plenary.reload').reload_module('lucy', true)
+
 require('packer').startup(function()
    use 'wbthomason/packer.nvim'
    use 'kjssad/quantum.vim'
@@ -33,8 +37,6 @@ require('packer').startup(function()
    use 'jose-elias-alvarez/nvim-lsp-ts-utils'
 end)
 
--- reload lucy
-require('plenary.reload').reload_module('lucy', true)
 EOF
 
 "" --------  Vim Set's ----------
@@ -463,29 +465,21 @@ require'bufferline'.setup{
 }
 EOF
 
-"" --------  Mappings and config - Coq (autocomplete) ----------
-let g:coq_settings = {
-      \ 'auto_start': 'shut-up',
-      \ 'keymap.manual_complete': '<C-Space>',
-      \ 'keymap.jump_to_mark': '',
-      \ 'keymap.bigger_preview': '<C-k>',
-      \ 'keymap.repeat': '',
-      \ 'keymap.eval_snips': '',
-      \ }
-
-ino <silent><expr> <Esc> pumvisible() ? "\<C-e><Esc>" : "\<Esc>"
-ino <silent><expr> <C-c> pumvisible() ? "\<C-e><C-c>" : "\<C-c>"
-ino <silent><expr> <BS> pumvisible() ? "\<C-e><BS>" : "\<BS>"
-ino <silent><expr> <CR> pumvisible() ? (complete_info().selected == -1 ? "\<C-e><CR>" : "\<C-y>") : "\<CR>"
-
-"" --------  Mappings and config - nvim-autopairs ----------
+"" --------  Mappings and config - COQ and nvim-autopairs ----------
 lua <<EOF
 local remap = vim.api.nvim_set_keymap
 local npairs = require('nvim-autopairs')
 
 npairs.setup({ map_bs = false, map_cr = false })
 
-vim.g.coq_settings = { keymap = { recommended = false } }
+vim.g.coq_settings = { 
+  auto_start= "shut-up", 
+  keymap = { 
+    recommended = false,
+    manual_complete = "<C-Space>",
+    bigger_preview = "<C-k>",
+  } 
+}
 
 -- these mappings are coq recommended mappings unrelated to nvim-autopairs
 remap('i', '<esc>', [[pumvisible() ? "<c-e><esc>" : "<esc>"]], { expr = true, noremap = true })
