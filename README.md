@@ -23,9 +23,9 @@ Lately I am using Windows for everything, with WSL. I realized I could do everyt
 
 # Favorite programs
 
-`lf` for file browsing
-
 `neovim` for editing text/code
+
+`lf` for file browsing
 
 `fzf`
 
