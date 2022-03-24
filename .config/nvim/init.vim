@@ -1,4 +1,5 @@
 " Programs Required for some stuff:
+" - (if on WSL2) win32yank (scoop install win32yank (on windows)) - for clipboard
 " - rg
 " - LSP servers = rust-analyzer, clangd, typescript-language-server
 " - (for COQ) python3-venv (apt install --yes -- python3-venv)
@@ -41,9 +42,8 @@ end)
 
 EOF
 
+
 "" --------  Vim Set's ----------
-" " disable netrw (it is bad)
-autocmd FileType netrw setl bufhidden=wipe
 
 lua <<EOF
 vim.g.loaded_netrw       = 1
@@ -74,9 +74,7 @@ vim.o.scrolloff=10
 vim.opt.shortmess:append('A')
 vim.opt.sessionoptions:append('globals')
 EOF
-au VimResized * wincmd =
 filetype plugin indent on
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 "" --------  Theming ----------
 colorscheme quantum
@@ -115,7 +113,6 @@ function! AdaptColorscheme()
    highlight VertSplit ctermbg=none
    highlight SignColumn ctermbg=none
 endfunction
-autocmd ColorScheme * call AdaptColorscheme()
 
 highlight Normal guibg=NONE ctermbg=NONE
 highlight CursorColumn cterm=NONE ctermbg=NONE ctermfg=NONE
@@ -125,16 +122,33 @@ highlight clear LineNr
 highlight clear SignColumn
 highlight clear StatusLine
 
-" Change Color when entering Insert Mode
-autocmd InsertEnter * set nocursorline
-
-" Revert Color to default when leaving Insert Mode
-autocmd InsertLeave * set nocursorline
-
 "" extra settings, uncomment them if necessary :) 
 "set cursorline
 "set noshowmode
 set nocursorline
+
+"" ---------- autocommands ------
+lua << EOF
+-- TODO: do the rest in lua like this: (uncomment)
+-- local au = vim.api.nvim_create_autocmd
+-- local lucyg = vim.api.nvim_create_augroup("lucy", {clear = true})
+-- au("BufEnter", {callback = function() vim.bo.filetype = "text" end, pattern = "*.txt", group = lucyg})
+EOF
+
+augroup lucy
+  autocmd!
+  " " disable netrw (it is bad)
+  au FileType netrw setl bufhidden=wipe
+  au BufEnter *.txt setl filetype=text
+  au BufWritePost $MYVIMRC source $MYVIMRC
+  au VimResized * wincmd =
+  au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
+  " for transparent bg (might not be necessary)
+  au ColorScheme * call AdaptColorscheme()
+  au InsertEnter * set nocursorline
+  au InsertLeave * set nocursorline
+augroup END
 
 "" --------  Mappings (no plugins) ----------
 
@@ -222,12 +236,7 @@ endfunction
 command! -nargs=1 SmolBlockComment call s:smol_block_comment(<args>)
 
 command! Scratch lua require'lucy'.makeScratch()
-
-" source vimrc when saving
-augroup reload_vimrc
-autocmd!
-autocmd BufWritePost $MYVIMRC source $MYVIMRC
-augroup END
+command! FixCompilerOutput lua require'lucy'.fix_compiler_output()
 
 "" --------  Statusline ----------
 set statusline=
@@ -244,11 +253,11 @@ set statusline+=\
 "" ----------- Clipboard fix for WSL2 ---------
 let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
 if executable(s:clip)
-    augroup WSLYank
-        autocmd!
-        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
-    augroup END
-  endif
+  augroup WSLYank
+    autocmd!
+    autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
+  augroup END
+endif
 
 
 "" --------  Mappings and config - Nvim LSP ----------
@@ -267,12 +276,11 @@ lua <<EOF
 
 local lspconfig = require("lspconfig")
 
-
 local function setup_diagnostics()
     vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
       vim.lsp.diagnostic.on_publish_diagnostics, {
         underline = true,
-        virtual_text = false,
+        virtual_text = true,
         signs = true,
         update_in_insert = true,
         severity_sort = true,
@@ -483,7 +491,10 @@ vim.g.coq_settings = {
     recommended = false,
     manual_complete = "<C-Space>",
     bigger_preview = "<C-k>",
-  } 
+    jump_to_mark = "",
+    eval_snips = "",
+    ['repeat'] = "",
+  }
 }
 
 -- these mappings are coq recommended mappings unrelated to nvim-autopairs

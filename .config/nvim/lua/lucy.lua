@@ -39,4 +39,8 @@ function lucy.t_cmd(mode,theme,opts)
   builtin[mode](opts_final)
 end
 
+function lucy.fix_compiler_output()
+  api.nvim_command('%s/\\\\r\\\\n/\r/g')
+end
+
 return lucy

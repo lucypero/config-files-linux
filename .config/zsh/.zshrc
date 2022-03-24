@@ -7,6 +7,13 @@ antigen bundle Aloxaf/fzf-tab
 antigen bundle last-working-dir
 antigen apply
 
+# WSL stuff
+IS_WSL=false
+if [ $(uname -r | sed -n 's/.*\( *Microsoft *\).*/\1/ip') ];
+then
+  IS_WSL=true
+fi
+
 #golang stuff
 export GO111MODULE=on
 
@@ -43,11 +50,6 @@ setopt COMPLETE_ALIASES
 compinit
 _comp_options+=(globdots) #include hidden files
 
-# WSL stuff
-if [ $(uname -r | sed -n 's/.*\( *Microsoft *\).*/\1/ip') ];
-then
-  export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
-fi
 
 # vi mode
 bindkey -v
@@ -110,7 +112,12 @@ PROMPT='%B%F{219}[%f%b%B%F{219}%n%f%b %B$(pwd_t)%B%F{219}]%(!.#.$)%f%b '
 
 ### aliases
 alias e='$EDITOR'
-alias clip='xclip -selection clipboard'
+if [ $IS_WSL = true ]; then
+  alias c='clip.exe'
+  alias cpwd='wslpath -w "$(pwd)" | clip.exe'
+else
+  alias c='xclip -selection clipboard'
+fi
 alias ls='exa --color=never --icons -a'
 alias lua='lua5.3'
 alias xr='xrdb ~/.config/.Xresources'
@@ -132,9 +139,14 @@ alias ex='explorer.exe .'
 
 # aliases for building godot
 alias gb='./build_godot.sh'
+# build debug target
 alias gbd='./build_godot.sh -t debug -o'
+# build release target
 alias gbr='./build_godot.sh -t release'
+# just run the game on the switch
 alias gbg='./build_godot.sh -t debug -f'
+# build debug target and run the game on the switch
+alias gbdr='./build_godot.sh -t debug -r'
 
 alias un='sudo $HOME/.scripts/update-nvim'
 
