@@ -1,7 +1,7 @@
 " Programs Required for some stuff:
 " - (if on WSL2) win32yank (scoop install win32yank (on windows)) - for clipboard
 " - rg
-" - LSP servers = rust-analyzer, clangd, typescript-language-server
+" - LSP servers = rust-analyzer, clangd or ccls, typescript-language-server
 " - (for COQ) python3-venv (apt install --yes -- python3-venv)
 " - (for cute block comments) figlet and boxes
 
@@ -293,7 +293,15 @@ lspconfig.rust_analyzer.setup{
   capabilities = vim.lsp.protocol.make_client_capabilities(),
 }
 
-lspconfig.clangd.setup{}
+-- C++ is so bad it breaks vim.
+--lspconfig.clangd.setup{}
+lspconfig.ccls.setup {
+  init_options = {
+    cache = {
+      directory = ".ccls-cache";
+    };
+  }
+}
 
 -- adding typescript
 local buf_map = function(bufnr, mode, lhs, rhs, opts)

@@ -1,0 +1,29 @@
+#!/bin/sh
+# deps: go, cargo
+# this updates programs that are not in apt or i do not want to get from apt.
+
+# list of programs that it installs/updates:
+# --------------------
+# neovim
+# lf
+# fzf
+# exa
+# ripgrep
+# bat
+# --------------------
+
+# neovim
+~/.scripts/update-nvim
+# lf
+go install github.com/gokcehan/lf@latest
+# fzf
+rm -rf ~/.fzf
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install --key-bindings --completion --no-update-rc
+# exa
+cargo install exa
+# ripgrep
+cargo install ripgrep
+strip ~/.cargo/bin/rg
+# bat
+cargo install --locked bat
