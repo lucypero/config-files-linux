@@ -19,6 +19,10 @@ function lucy.nn(lhs, rhs)
   api.nvim_set_keymap('n', lhs, rhs, {noremap = true})
 end
 
+function lucy.nns(lhs, rhs)
+  api.nvim_set_keymap('n', lhs, rhs, {noremap = true, silent = true})
+end
+
 function lucy.makeScratch()
   api.nvim_command('enew')
   vim.bo.buftype = "nofile"
@@ -32,7 +36,7 @@ local actions = require("telescope.actions")
 local builtin = require("telescope.builtin")
 local themes = require("telescope.themes")
 
-function lucy.t_cmd(mode,theme,opts)
+function lucy.t_cmd(mode,opts)
   local opts_final = themes.get_ivy()
   opts = opts or {}
   for k,v in pairs(opts) do opts_final[k] = v end

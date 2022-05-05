@@ -1,0 +1,11 @@
+theme = "onedark"
+
+[editor]
+scrolloff = 8
+line-number = "relative"
+
+[editor.file-picker]
+hidden = false
+
+[keys.normal]
+C-A-f = ":format"

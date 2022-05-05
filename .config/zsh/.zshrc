@@ -14,6 +14,8 @@ then
   IS_WSL=true
 fi
 
+export COLORTERM=truecolor
+
 #golang stuff
 export GO111MODULE=on
 
@@ -138,15 +140,15 @@ alias mg='menu-game'
 alias ex='explorer.exe .'
 
 # aliases for building godot
-alias gb='./build_godot.sh'
+alias gb='python3.exe build_godot.py'
 # build debug target
-alias gbd='./build_godot.sh -t debug -o'
+alias gbd='python3.exe build_godot.py -t debug -o'
 # build release target
-alias gbr='./build_godot.sh -t release'
+alias gbr='python3.exe build_godot.py -t release'
 # just run the game on the switch
-alias gbg='./build_godot.sh -t debug -f'
+alias gbg='python3.exe build_godot.py -t debug -f'
 # build debug target and run the game on the switch
-alias gbdr='./build_godot.sh -t debug -r'
+alias gbdr='python3.exe build_godot.py -t debug -r'
 
 alias un='sudo $HOME/.scripts/update-nvim'
 
@@ -175,6 +177,12 @@ fn is_even(num: i32) -> bool {
     num % 2 == 0
 }
 "'
+
+#clean cpp project (delete obj files.)
+alias clean-project="find . -type f -name '*.obj' -exec rm {} +;find . -type f -name '*.o' -exec rm {} +"
+
+#close discord)
+alias dc="taskkill.exe /f /im discord.exe"
 
 #fzf config
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

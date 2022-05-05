@@ -5,15 +5,20 @@
 # list of programs that it installs/updates:
 # --------------------
 # neovim
+# gh
 # lf
 # fzf
 # exa
 # ripgrep
 # bat
+# tokei
 # --------------------
 
 # neovim
 ~/.scripts/update-nvim
+# gh
+wget https://github.com/cli/cli/releases/download/v2.9.0/gh_2.9.0_linux_amd64.deb -O /tmp/gh_linux_amd64.deb
+sudo dpkg -i /tmp/gh_linux_amd64.deb
 # lf
 go install github.com/gokcehan/lf@latest
 # fzf
@@ -27,3 +32,5 @@ cargo install ripgrep
 strip ~/.cargo/bin/rg
 # bat
 cargo install --locked bat
+# tokei
+cargo install --git https://github.com/XAMPPRocky/tokei.git tokei

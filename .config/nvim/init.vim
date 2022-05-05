@@ -17,15 +17,19 @@ require('packer').startup(function()
    use 'tpope/vim-commentary'
    use 'skywind3000/asyncrun.vim'
    use 'tpope/vim-obsession'
-   use 'kyazdani42/nvim-web-devicons'
    use 'kyazdani42/nvim-tree.lua'
-   use 'akinsho/nvim-bufferline.lua'
+   use {
+     'akinsho/bufferline.nvim',
+     tag = "*",
+     requires = 'kyazdani42/nvim-web-devicons'
+   }
    use 'tpope/vim-fugitive'
    use 'phaazon/hop.nvim'
    use {
      'nvim-telescope/telescope.nvim',
      requires = { {'nvim-lua/plenary.nvim'} }
    }
+   use 'nvim-telescope/telescope-ui-select.nvim'
    use 'liuchengxu/vista.vim'
    use 'neovim/nvim-lspconfig'
    use 'simrat39/rust-tools.nvim'
@@ -37,7 +41,9 @@ require('packer').startup(function()
 -- Ts stuff
    use 'jose-elias-alvarez/null-ls.nvim'
    use 'jose-elias-alvarez/nvim-lsp-ts-utils'
+
    use 'tpope/vim-scriptease'
+   use 'folke/todo-comments.nvim'
 end)
 
 EOF
@@ -49,6 +55,7 @@ lua <<EOF
 vim.g.loaded_netrw       = 1
 vim.g.loaded_netrwPlugin = 1
 vim.o.linespace=1
+vim.o.signcolumn="yes:1"
 vim.o.guifont="FiraCode Nerd Font:h16"
 vim.g.netrw_fastbrowse = 0
 vim.o.linebreak = true
@@ -73,6 +80,7 @@ vim.o.splitright = true
 vim.o.scrolloff=10
 vim.opt.shortmess:append('A')
 vim.opt.sessionoptions:append('globals')
+vim.o.showcmd = false
 EOF
 filetype plugin indent on
 
@@ -101,32 +109,6 @@ hi jsThis gui=NONE
 hi jsSuper gui=NONE
 hi htmlTagName gui=NONE
 
-"" --------  Transparent background ----------
-
-function! AdaptColorscheme()
-   highlight clear CursorLine
-   highlight Normal ctermbg=none
-   highlight LineNr ctermbg=none
-   highlight Folded ctermbg=none
-   highlight NonText ctermbg=none
-   highlight SpecialKey ctermbg=none
-   highlight VertSplit ctermbg=none
-   highlight SignColumn ctermbg=none
-endfunction
-
-highlight Normal guibg=NONE ctermbg=NONE
-highlight CursorColumn cterm=NONE ctermbg=NONE ctermfg=NONE
-highlight CursorLine cterm=NONE ctermbg=NONE ctermfg=NONE
-highlight CursorLineNr cterm=NONE ctermbg=NONE ctermfg=NONE
-highlight clear LineNr
-highlight clear SignColumn
-highlight clear StatusLine
-
-"" extra settings, uncomment them if necessary :) 
-"set cursorline
-"set noshowmode
-set nocursorline
-
 "" ---------- autocommands ------
 lua << EOF
 -- TODO: do the rest in lua like this: (uncomment)
@@ -144,8 +126,6 @@ augroup lucy
   au VimResized * wincmd =
   au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-  " for transparent bg (might not be necessary)
-  au ColorScheme * call AdaptColorscheme()
   au InsertEnter * set nocursorline
   au InsertLeave * set nocursorline
 augroup END
@@ -273,7 +253,6 @@ nn ge <CMD>lua vim.diagnostic.setloclist()<CR>
 nn <leader>ff <cmd>lua vim.lsp.buf.formatting()<CR>
 
 lua <<EOF
-
 local lspconfig = require("lspconfig")
 
 local function setup_diagnostics()
@@ -289,19 +268,11 @@ local function setup_diagnostics()
 end
 
 -- rustup component add rust-src
-lspconfig.rust_analyzer.setup{
-  capabilities = vim.lsp.protocol.make_client_capabilities(),
-}
+--lspconfig.rust_analyzer.setup{
+--  capabilities = vim.lsp.protocol.make_client_capabilities(),
+--}
 
--- C++ is so bad it breaks vim.
---lspconfig.clangd.setup{}
-lspconfig.ccls.setup {
-  init_options = {
-    cache = {
-      directory = ".ccls-cache";
-    };
-  }
-}
+lspconfig.clangd.setup{}
 
 -- adding typescript
 local buf_map = function(bufnr, mode, lhs, rhs, opts)
@@ -387,7 +358,7 @@ function! s:build_project()
   endif
 
   if &filetype ==# "python"
-    execute "AsyncRun -raw python -u %"	
+    execute "AsyncRun python3 %"	
   elseif  &filetype ==# "c" || &filetype ==# "cpp"
     execute "AsyncRun \.\/build.sh"	
   elseif &filetype ==# "odin"
@@ -449,14 +420,15 @@ local delete_buffers = function(prompt_bufnr)
 end
 
 -- telescope related mappings
-l.nn('<leader>o', ":lua require('lucy').t_cmd('find_files')<cr>")
-l.nn('<leader>b', ":lua require('lucy').t_cmd('buffers')<cr>")
-l.nn('<leader>r', ":lua require('lucy').t_cmd('live_grep')<cr>")
-l.nn('<leader>cw', ":lua require('lucy').t_cmd('lsp_workspace_symbols')<cr>")
-l.nn('<leader>cp', ":lua require('lucy').t_cmd('lsp_document_symbols')<cr>")
-l.nn('<leader>h', ":lua require('lucy').t_cmd('help_tags')<cr>")
-l.nn('<leader>d', ":lua require('lucy').t_cmd('diagnostics', {bufnr = 0})<cr>")
-l.nn('<leader>D', ":lua require('lucy').t_cmd('diagnostics')<cr>")
+l.nns('<leader>o', ":lua require('lucy').t_cmd('find_files')<cr>")
+l.nns('<leader>O', ":lua require('lucy').t_cmd('find_files', {follow = true, hidden = true, no_ignore = true})<cr>")
+l.nns('<leader>b', ":lua require('lucy').t_cmd('buffers')<cr>")
+l.nns('<leader>r', ":lua require('lucy').t_cmd('live_grep')<cr>")
+l.nns('<leader>cw', ":lua require('lucy').t_cmd('lsp_workspace_symbols')<cr>")
+l.nns('<leader>cp', ":lua require('lucy').t_cmd('lsp_document_symbols')<cr>")
+l.nns('<leader>h', ":lua require('lucy').t_cmd('help_tags')<cr>")
+l.nns('<leader>d', ":lua require('lucy').t_cmd('diagnostics', {bufnr = 0})<cr>")
+l.nns('<leader>D', ":lua require('lucy').t_cmd('diagnostics')<cr>")
 
 -- telescope settings and mappings (inside telescope)
 require('telescope').setup{
@@ -473,7 +445,16 @@ defaults = {
       },
     },
   },
+extensions = {
+    ["ui-select"] = {
+      require("telescope.themes").get_dropdown {
+        -- even more opts
+      }
+    }
+  }
 }
+
+require("telescope").load_extension("ui-select")
 EOF
 
 "" --------  Mappings and config - Bufferline ----------
