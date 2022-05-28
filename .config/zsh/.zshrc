@@ -268,3 +268,12 @@ ef() {
   cd "$(cat ~/docs/bookmarks | fzf)"
   $EDITOR
 }
+
+# ssh into bookmarked ssh's
+essh() {
+  ssh "$(cat ~/docs/ssh-bookmarks | fzf | python3 -c '
+import sys
+for line in sys.stdin:
+  print(line.split(" #")[0])'
+)"
+}
