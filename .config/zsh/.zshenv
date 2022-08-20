@@ -2,7 +2,7 @@
 export ZDOTDIR="$HOME/.config/zsh"
 
 export PATH=$HOME/.cargo/bin:$PATH:~/.local/bin:~/.scripts:/usr/local/go/bin:$HOME/go/bin
-export EDITOR=nvim
+export EDITOR=helix
 export BROWSER=brave
 export TERMINAL=kitty
 export IMAGE_VIEWER=sxiv
@@ -16,4 +16,3 @@ source "$HOME/.cargo/env" >/dev/null 2>&1
 
 #vulkan SDK stuff
 source "$HOME/programs/vulkan-sdk/1.2.170.0/setup-env.sh" >/dev/null 2>&1
-. "$HOME/.cargo/env"
